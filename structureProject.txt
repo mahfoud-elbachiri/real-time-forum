@@ -1,0 +1,81 @@
+real-time-forum/
+│
+├── backend/                    # Go backend
+│   ├── cmd/                    # Main entry point for your Go app
+│   │   └── main.go             # Main entry for Go server
+│   │
+│   ├── config/                 # Configuration files (DB, environment variables)
+│   │   └── config.go
+│   │
+│   ├── handlers/               # HTTP and WebSocket request handlers
+│   │   ├── post_handler.go     # Handles post-related requests
+│   │   ├── message_handler.go  # Handles private messages
+│   │   ├── user_handler.go     # Handles user-related requests
+│   │   └── ws_handler.go       # Handles WebSocket connections
+│   │
+│   ├── models/                 # Database models (ORM)
+│   │   ├── post.go             # Post model
+│   │   ├── message.go          # Message model
+│   │   └── user.go             # User model
+│   │
+│   ├── services/               # Business logic and services
+│   │   ├── post_service.go     # Handles post-related logic
+│   │   ├── message_service.go  # Handles private messages logic
+│   │   └── auth_service.go     # Handles authentication and JWT
+│   │
+│   ├── db/                     # Database connection and initialization
+│   │   └── db.go               # DB setup
+│   │
+│   ├── utils/                  # Helper utilities
+│   │   ├── jwt.go              # JWT token utilities
+│   │   ├── error.go            # Error handling functions
+│   │   └── websocket.go        # WebSocket utilities
+│   │
+│   ├── static/                 # Static files served by Go
+│   │   ├── index.html          # Main HTML entry point
+│   │   ├── style.css           # Global styles
+│   │   ├── app.js              # Main JavaScript file
+│   │   └── assets/             # Images, fonts, etc.
+│   │
+│   ├── routes/                 # Route definitions for Go
+│   │   └── routes.go           # Defines API routes and handlers
+│   │
+│   ├── middleware/             # Middleware for authentication, logging, etc.
+│   │   ├── auth_middleware.go  # JWT authentication middleware
+│   │   ├── cors.go             # CORS handling middleware
+│   │   └── logging.go          # Logging middleware
+│   │
+│   └── server.go               # Initializes HTTP server and routes
+│
+├── frontend/                   # Frontend (plain HTML, CSS, JavaScript)
+│   ├── public/                 # Static public files
+│   │   ├── index.html          # Main HTML entry point
+│   │   ├── about.html          # Example additional page
+│   │   ├── profile.html        # User profile page
+│   │   ├── style.css           # Main stylesheet
+│   │   ├── app.js              # Main JavaScript file
+│   │   ├── assets/             # Images, icons, fonts
+│   │   └── favicon.ico         # Site icon
+│   │
+│   ├── js/                     # JavaScript modules
+│   │   ├── post.js             # Handles posts logic
+│   │   ├── message.js          # Handles messages logic
+│   │   ├── user.js             # Handles user interactions
+│   │   ├── websocket.js        # WebSocket handling
+│   │   ├── api.js              # API calls to backend
+│   │   └── utils.js            # Helper functions
+│   │
+│   ├── css/                    # Additional CSS files
+│   │   ├── components.css      # Styles for components
+│   │   ├── layout.css          # Styles for page layout
+│   │   └── theme.css           # Theme styles
+│   │
+│   ├── .env                    # Environment variables (if needed)
+│   ├── package.json            # (Optional) If using npm for dependencies
+│   └── README.md               # Project documentation
+│
+├── .gitignore                  # Git ignore file
+├── docker-compose.yml          # Docker compose file for running containers
+├── Dockerfile                  # Dockerfile for Go backend
+├── README.md                   # Project documentation
+└── LICENSE                     # Project license
