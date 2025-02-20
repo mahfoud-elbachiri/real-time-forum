@@ -29,7 +29,7 @@ func main() {
 	}
 }
 
-func Servingfiles(){
+func Servingfiles() {
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("../frontend/css"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("../frontend/js"))))
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("../public/js"))))
