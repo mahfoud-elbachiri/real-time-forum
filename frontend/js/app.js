@@ -19,7 +19,7 @@ function login(){
 // Function to load different views dynamically
 function navigateTo(page) {
 
-    let csspath ="login.css"
+    let csspath ="/frontend/css/login.css"
     let content = "";
     
     if (page === "home") {
@@ -28,25 +28,25 @@ function navigateTo(page) {
     else if (page === "login") {
          
         content = `
+        <div id="loginform">
+         <div class="container">
             <h2>Login</h2>
-                <div class="container">
-        <h2>Login</h2>
-        <input type="text" id="user" placeholder="Username or Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="login">Login</button>
-        <div class="register-btn">Register</div>
-    </div>
+                <input type="text" id="user" placeholder="Username or Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="login">Login</button>
+
+            <div class="register-btn">Register</div>
+         </div>
+         <div>
         `;
     } 
     else if (page === "register") {
-        csspath = "register.css"
+        csspath = "/frontend/css/register.css"
         content = `
-
-
             <form id="registerForm">
-                    
-        <h2>Register to Forum</h2>
-        <form id="registerForm">
+        <div class="container">
+            <h2>Register to Forum</h2>
+
             <div class="form-group">
                 <label for="nickname">Nickname</label>
                 <input type="text" id="nickname" name="nickname" required>
@@ -60,7 +60,7 @@ function navigateTo(page) {
                 <select id="gender" name="gender">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                   
+
                 </select>
             </div>
             <div class="form-group">
@@ -80,14 +80,18 @@ function navigateTo(page) {
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit">Register</button>
-        </form>
-        <p>Already have an account? <a href="login.html">Login</a></p>
-     
-            </form>
+
+            <p>Already have an account? <a href="navigateTo("login")">Login</a></p>
+        </div>
+    </form>
+
+ 
         `;
     }
 
-    document.getElementById("page-style").setAttribute("href",csspath)
+ 
+    document.getElementById("page-style").setAttribute("href", csspath);
+
     // Update the content inside #app
     document.getElementById("app").innerHTML = content;
 }
