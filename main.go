@@ -1,26 +1,31 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
-
 	"real-time-forum/backend/routes"
-
+	dataBase "real-time-forum/database"
+	"real-time-forum/backend/handlers"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var db *sql.DB
-
 func main() {
-	var errdb error
-	db, errdb = sql.Open("sqlite3", "./databasse.sqlite")
-	if errdb != nil {
-		fmt.Println(errdb)
-	}
-	defer db.Close()
+
+	dataBase.InitSchema()
+
 	Servingfiles()
 	routes.WebRoutes()
+
+
+	//handlers 
+
+	http.HandleFunc("/register" , handlers.RegisterHandler)
+	http.HandleFunc("/login" , handlers.RegisterHandler)
+	http.HandleFunc("/lougout" , handlers.LogOutHandler)
+
+
+
+
 	fmt.Println("Starting server on :8000")
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
