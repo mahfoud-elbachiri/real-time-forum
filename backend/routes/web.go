@@ -1,10 +1,14 @@
 package routes
 
 import (
-	"real-time-forum/backend/handlers"
 	"net/http"
+
+	"real-time-forum/backend/handlers"
 )
 
-func WebRoutes(){
+func WebRoutes() {
 	http.HandleFunc("/", handlers.HandleHome)
+	http.HandleFunc("/login", handlers.RegisterHandler) 
+	http.HandleFunc("/register", handlers.RegisterHandler)
+	http.HandleFunc("/lougout", handlers.LogOutHandler)
 }

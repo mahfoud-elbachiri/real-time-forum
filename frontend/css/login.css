@@ -1,64 +1,64 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Basic reset */
+body {
     font-family: Arial, sans-serif;
-}
-#loginform {
-   
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f4;
     margin: 0;
-}
-
-.container {
-    background: rgb(228, 241, 239);
+    background: #f4f4f4;
+  }
+  
+  /* Container styling */
+  .container {
+    background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 300px;
-}
-
-h2 {
-    margin-bottom: 15px;
-}
-
-input {
-    width: 90%;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+  }
+  
+  /* Input fields */
+  input {
+    width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-button {
+    font-size: 16px;
+  }
+  
+  /* Buttons */
+  button {
     width: 100%;
     padding: 10px;
-    background-color: #28a745;
-    color: white;
+    margin-top: 10px;
     border: none;
     border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-.register-btn {
-    display: block;
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #007bff;
+  }
+  
+  button[type="login"] {
+    background: #007bff;
     color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.register-btn:hover {
-    background-color: #0056b3;
-}
+  }
+  
+  button[type="login"]:hover {
+    background: #0056b3;
+  }
+  
+  .register-btn {
+    background: #28a745;
+    color: white;
+  }
+  
+  .register-btn:hover {
+    background: #1e7e34;
+  }
+  

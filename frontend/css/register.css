@@ -1,4 +1,4 @@
-/* Global Reset */
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,66 +6,65 @@
     font-family: Arial, sans-serif;
 }
 
-#registerForm {
-    background-color: #f4f4f4;
+body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #f4f4f4;
 }
 
+/* Container Styles */
 .container {
     background: rgb(228, 241, 239);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    width: 300px;
 }
 
+/* Heading */
 h2 {
     margin-bottom: 15px;
-    color: #333;
 }
 
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, select {
-    width: 100%;
-    padding: 8px;
+/* Input and Select Styles */
+input,
+select {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
+/* Button Styles */
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-p {
     margin-top: 10px;
 }
 
-a {
+button:hover {
+    background-color: #218838;
+}
+
+/* Link Styles */
+p {
+    margin-top: 15px;
+}
+
+p a {
     color: #007bff;
     text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
 }
