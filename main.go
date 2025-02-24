@@ -3,28 +3,25 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"real-time-forum/backend/handlers"
 	"real-time-forum/backend/routes"
 	dataBase "real-time-forum/database"
-	"real-time-forum/backend/handlers"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-
 	dataBase.InitSchema()
 
 	Servingfiles()
 	routes.WebRoutes()
 
+	// handlers
 
-	//handlers 
-
-	http.HandleFunc("/register" , handlers.RegisterHandler)
-	http.HandleFunc("/login" , handlers.RegisterHandler)
-	http.HandleFunc("/lougout" , handlers.LogOutHandler)
-
-
-
+	http.HandleFunc("/register", handlers.RegisterHandler)
+	http.HandleFunc("/login", handlers.RegisterHandler)
+	http.HandleFunc("/lougout", handlers.LogOutHandler)
 
 	fmt.Println("Starting server on :8000")
 	err := http.ListenAndServe(":8000", nil)

@@ -8,11 +8,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var DB   *sql.DB
-var once sync.Once
- 
- 
- 
+var (
+	DB   *sql.DB
+	once sync.Once
+)
+
 func GetDB() *sql.DB {
 	once.Do(func() {
 		var err error
@@ -27,11 +27,10 @@ func GetDB() *sql.DB {
 	return DB
 }
 
- 
 func InitSchema() {
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS users (
-            id TEXT PRIMARY KEY,
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
             nickname TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
@@ -46,11 +45,10 @@ func InitSchema() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             session TEXT NOT NULL,
             user_id TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             exp_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id)
         );`,
- 
+
 		`CREATE TABLE IF NOT EXISTS posts (
             id TEXT PRIMARY KEY,
             user_id TEXT NOT NULL,
@@ -82,7 +80,7 @@ func InitSchema() {
             FOREIGN KEY(post_id) REFERENCES posts(id),
             FOREIGN KEY(user_id) REFERENCES users(id)
         );`,
-        `CREATE TABLE IF NOT EXISTS liked_posts (
+		`CREATE TABLE IF NOT EXISTS liked_posts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             post_id INTEGER NOT NULL,
             user_id INTEGER NOT NULL,
