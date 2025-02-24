@@ -12,9 +12,6 @@
 //     })
 // }
 
-document.querySelector(".register-btn").addEventListener("click", function () {
-    navigateTo("register")
-})
 
 // document.getElementsByClassName().addEventListener("submit", async function (evnt) {
 //     evnt.preventDefault()
@@ -58,11 +55,16 @@ document.querySelector(".register-btn").addEventListener("click", function () {
 
 
 // })
+document.querySelector(".register-btn").addEventListener("click", function () {
+    navigateTo("register")
+})
 
 
 // Function to load different views dynamically
 function navigateTo(page) {
     console.log(page);
+
+    let content =""
 
     if (page === "login") {
 
@@ -97,14 +99,29 @@ function navigateTo(page) {
         <input type="text" id="lastName" name="lastName" required>
         <input type="email" id="email" name="email" required>
         <input type="password" id="password" name="password" required>
-        <button type="submit">Register</button>
+        <button type="button">Register</button>
 
         <p>Already have an account? <a onclick = "navigateTo('login')">Login</a></p>
     </div>
         `;
     }
+
+    const app = document.getElementById('app');
+    if (app) {
+        app.innerHTML = content;
+    }
+
     const stylo = document.getElementById('page-style');
-    stylo.href = `/frontend/css/${page}.css`
-    document.body.innerHTML = content;
+    if (stylo) {
+
+        stylo.href = `/frontend/css/${page}.css`
+    }
+
+    setTimeout(()=> {
+        const registerButton = document.querySelector(".register-btn")
+        if (registerButton) {
+            registerButton.addEventListener("click" ,()=> navigateTo("register"))
+        }
+    },0)
     // Update the content inside #app
 }
