@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"real-time-forum/backend/app"
+	"real-time-forum/backend/tools"
 	"real-time-forum/backend/models"
 	"real-time-forum/database"
 
@@ -37,7 +38,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Compare hashed password with provided password
-	err = bcrypt.CompareHashAndPassword([]byte(pasw), []byte(user.Password))
+	err = tools.CheckPassword(pasw , user.Password)
 	if err != nil {
 		http.Error(w, "Invalid password", http.StatusUnauthorized)
 		return

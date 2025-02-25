@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os/exec"
 
 	"real-time-forum/backend/routes"
 	dataBase "real-time-forum/database"
@@ -14,9 +15,9 @@ func main() {
 	Servingfiles()
 	dataBase.InitSchema()
 	routes.WebRoutes()
-	fmt.Println("Starting server on :8080")
-
-	err := http.ListenAndServe(":8088", nil)
+	fmt.Println("Starting server on :8000")
+	exec.Command("xdg-open", "http://localhost:8000/").Start()
+	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		fmt.Println("err starting the server : ", err)
 		return

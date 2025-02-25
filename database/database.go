@@ -37,9 +37,8 @@ func InitSchema() {
             first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             age INTEGER NOT NULL,
-            gender TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            last_seen DATETIME DEFAULT CURRENT_TIMESTAMP
+            gender TEXT NOT NULL
+         
         );`,
 		`CREATE TABLE IF NOT EXISTS sessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -10,6 +10,8 @@
 <body>
     <div class="container">
         <h2>Register</h2>
+
+        <form id="form">
         <div class="form-group">
             <label for="nickname">Nickname</label>
             <input type="text" id="nickname" required>
@@ -41,7 +43,8 @@
             <label for="password">Password</label>
             <input type="password" id="password" required>
         </div>
-        <button onclick="registerUser()">Register</button>
+        <button class= "send" type="submit" >Register</button>
+    </form>
         <p>Already have an account ? <a onclick="navigateTo('login')">Login</a></p>
     </div>
 </body>
