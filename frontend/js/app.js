@@ -62,9 +62,8 @@ document.querySelector(".register-btn").addEventListener("click", function () {
 
 // Function to load different views dynamically
 function navigateTo(page) {
-    console.log(page);
 
-    let content =""
+    let content = ""
 
     if (page === "login") {
 
@@ -86,22 +85,41 @@ function navigateTo(page) {
     }
     else if (page === "register") {
         content = `
-         <div class="container">
+            <div class="container">
         <h2>Register to Forum</h2>
-
-        <input type="text" id="nickname" name="nickname" required>
-        <input type="number" id="age" name="age" required>
-        <select id="gender" name="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <input type="text" id="firstName" name="firstName" required>
-        <input type="text" id="lastName" name="lastName" required>
-        <input type="email" id="email" name="email" required>
-        <input type="password" id="password" name="password" required>
-        <button type="button">Register</button>
-
-        <p>Already have an account? <a onclick = "navigateTo('login')">Login</a></p>
+        <div class="form-group">
+            <label for="nickname">Nickname</label>
+            <input type="text" id="nickname" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+        </div>
+        <button onclick="registerUser()">Register</button>
+        <p>Already have an account? <a onclick="navigateTo('login')">Login</a></p>
     </div>
         `;
     }
@@ -113,15 +131,14 @@ function navigateTo(page) {
 
     const stylo = document.getElementById('page-style');
     if (stylo) {
-
         stylo.href = `/frontend/css/${page}.css`
     }
 
-    setTimeout(()=> {
+    setTimeout(() => {
         const registerButton = document.querySelector(".register-btn")
         if (registerButton) {
-            registerButton.addEventListener("click" ,()=> navigateTo("register"))
+            registerButton.addEventListener("click", () => navigateTo("register"))
         }
-    },0)
+    }, 0)
     // Update the content inside #app
 }

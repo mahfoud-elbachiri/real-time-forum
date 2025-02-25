@@ -4,28 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Register - Forum</title>
 </head>
 
 <body>
     <div class="container">
-        <h2>Register to Forum</h2>
-
-        <input type="text" id="nickname" name="nickname" required>
-        <input type="number" id="age" name="age" required>
-        <select id="gender" name="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <input type="text" id="firstName" name="firstName" required>
-        <input type="text" id="lastName" name="lastName" required>
-        <input type="email" id="email" name="email" required>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Register</button>
-
-        <p>Already have an account? <a onclick = "navigateTo('login')">Login</a></p>
+        <h2>Register</h2>
+        <div class="form-group">
+            <label for="nickname">Nickname</label>
+            <input type="text" id="nickname" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+        </div>
+        <button onclick="registerUser()">Register</button>
+        <p>Already have an account ? <a onclick="navigateTo('login')">Login</a></p>
     </div>
-
 </body>
 
 </html>
