@@ -7,13 +7,10 @@ import (
 	"time"
 
 	"real-time-forum/backend/app"
-	"real-time-forum/backend/tools"
 	"real-time-forum/backend/models"
+	"real-time-forum/backend/tools"
 	"real-time-forum/database"
-
-	"golang.org/x/crypto/bcrypt"
 )
-
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -38,7 +35,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Compare hashed password with provided password
-	err = tools.CheckPassword(pasw , user.Password)
+	err = tools.CheckPassword(pasw, user.Password)
 	if err != nil {
 		http.Error(w, "Invalid password", http.StatusUnauthorized)
 		return
