@@ -1,4 +1,10 @@
 /* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -65,3 +71,26 @@ body {
   }
   
   
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+
+#popup {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.5s ease-in-out;
+}
+#popup.success {
+    background-color: #28a745;
+}

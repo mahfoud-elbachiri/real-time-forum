@@ -13,12 +13,13 @@ export function showError(field, message) {
 export function clearErrors() {
     document.querySelectorAll(".error-message").forEach(el => el.innerText = "");
 }
-export function showToast(message, type = "error") {
-    const toast = document.getElementById("toast");
-    toast.innerText = message;
-    toast.className = "toast " + type;
-    toast.style.display = "block";
-    setTimeout(() => { toast.style.display = "none"; }, 3000);
+
+export function showpopup(message, type = "error") {
+    const popup = document.getElementById("popup");
+    popup.innerText = message;
+    popup.className = "popup " + type;
+    popup.style.display = "block";
+    setTimeout(() => { popup.style.display = "none"; }, 3000);
 }
 export function validateEmail(email) {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,6}$/;

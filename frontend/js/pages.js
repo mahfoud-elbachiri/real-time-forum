@@ -2,7 +2,7 @@
 //     navigateTo("register")
 // })
 
-import {Register} from '/frontend/js/app.js'
+import {Register,Login} from '/frontend/js/app.js'
  
 function addListers() {
     document.body.addEventListener("click", function (event) {
@@ -14,32 +14,30 @@ function addListers() {
         } 
         else if (event.target.matches("#link-login")) {
             navigateTo("login");
+        }else if (event.target.matches(".login-btn")) {
+            Login();
         }
     });
 }
 
-addListers()
- 
-  function navigateTo(page) {
+ export function navigateTo(page) {
     let content = ""
     
  
     if (page === "login") {
 
-        content = `
+ content = `
 
-  <div id="loginform">
-    <div class="container">
-      <h2>Login</h2>
-      <input type="text" id="user" placeholder="Username or Email" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button class="login-btn">Login</button>
-      <button class="register-btn">register</button>
-      <!-- <div class="register-btn">Register</div> -->
+    <div id="loginform">
+        <div class="container">
+            <h2>Login</h2>
+            <input type="text" id="user" placeholder="Username or Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button class="login-btn">Login</button>
+            <button class="register-btn">register</button>
+        </div>
     </div>
-    <div id="app"></div>
-    <div>
-      <script src="/frontend/js/app.js"></script>
+       
         `;
     }
     else if (page === "register") {
@@ -81,12 +79,9 @@ addListers()
         <p>Already have an account ? <a id="link-login">Login</a></p>
     </div>
         `;
+    }else if (page === "home") {
+        
     }
-
-    
-  //  document.getElementById("#register-submit")?.addEventListener("click", Register)
-
-    
 
     const stylo = document.getElementById('page-style');
     if (stylo) {
@@ -101,3 +96,5 @@ addListers()
       //  addListers()
  }
 
+
+ addListers()
