@@ -35,7 +35,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Nickname == "" {
+	if user.Nickname == "" || user.Email == ""  {
 		jsonResponse(w, http.StatusBadRequest, "All fields are required")
 		return
 	}
@@ -53,8 +53,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	res, err := database.DB.Exec("INSERT INTO users (nickname,email,password,first_name,last_name,age,gender) VALUES(?,?,?,?,?,?,?)", user.Nickname, user.Email, string(hashedPassword), user.FirstName, user.LastName, user.Age, user.Gender, user.CreatedAt, user.LastSeen)
 	if err != nil {
 		fmt.Println("error in insert : ",err)
-		 http.Error(w, "Error saving user", http.StatusInternalServerError)
-		//jsonResponse(w, http.StatusBadRequest, "Username or Email , Already Exist")
+ 		jsonResponse(w, http.StatusInternalServerError, "some input are not allowed")
 		return
 	}
 
@@ -71,14 +70,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err3.Error())
 		return
 	}
-
+	fmt.Println("username : ",user.Nickname,"registred *****")
 	w.WriteHeader(http.StatusCreated)
 //	fmt.Fprintln(w, "User registered successfully")
 	jsonResponse(w, http.StatusCreated, "User registered successfully")
 }
 
-func jsonResponse(w http.ResponseWriter, statusCode int, message string) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(map[string]string{"message": message})
-}

@@ -7,11 +7,11 @@ func HandleHome(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			http.ServeFile(w, r, "frontend/public/login.html")
 		} else {
-			ErrorHundler(w, r, http.StatusNotFound, http.StatusText(http.StatusNotFound))
+			jsonResponse(w,http.StatusNotFound, http.StatusText(http.StatusNotFound))
 			return
 		}
 	} else {
-		ErrorHundler(w, r, http.StatusMethodNotAllowed, "")
+		jsonResponse(w,http.StatusMethodNotAllowed, http.StatusText(http.StatusMethodNotAllowed))
 		return
 	}
 }

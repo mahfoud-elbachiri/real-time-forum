@@ -66,6 +66,7 @@ p {
 }
 
 a {
+    cursor: pointer;
     color: #007bff;
     text-decoration: none;
 }
