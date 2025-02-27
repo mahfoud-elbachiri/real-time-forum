@@ -79,6 +79,8 @@ export async function Login() {
             }
 
             showpopup("Registered successfully!", "success");
+            navigateTo("home")
+            console.log("move");
             
         }catch (error){
             console.log("errorrr",error);  

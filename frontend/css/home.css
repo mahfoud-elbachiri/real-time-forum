@@ -1,0 +1,116 @@
+.home-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 290px;
+    gap: 20px;
+    padding: 20px;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+ 
+}
+
+.sidebar h2, .sidebar h3 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style:none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.sidebar button:hover {
+    background: #0056b3;
+}
+
+/* Main Content */
+.content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Posts */
+.post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.post h3 {
+    margin: 0;
+}
+
+.post p {
+    margin: 5px 0;
+}
+
+.like-btn {
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.like-btn:hover {
+    background: #e84118;
+}
+
+/* Messages */
+.messages {
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#message-list {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#messageInput {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.messages button {
+    width: 100%;
+    padding: 8px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.messages button:hover {
+    background: #218838;
+}

@@ -4,8 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/frontend/css/home.css"/>
 </head>
 <body>
- 
+    
+    <div class="home-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Forum Menu</h2>
+            <ul>
+                <li><button onclick="navigateTo('createPost')">➕ Create Post</button></li>
+                <li><button onclick="filterPosts('all')">📌 All Posts</button></li>
+                <li><button onclick="filterPosts('my')">📝 My Posts</button></li>
+                <li><button onclick="filterPosts('liked')">❤️ Liked Posts</button></li>
+                <li><button onclick="logout()">🚪 Logout</button></li>
+            </ul>
+    
+            <h3>Categories</h3>
+            <ul id="category-list">
+                <li><button onclick="filterPosts('tech')">💻 Tech</button></li>
+                <li><button onclick="filterPosts('gaming')">🎮 Gaming</button></li>
+                <li><button onclick="filterPosts('sports')">⚽ Sports</button></li>
+            </ul>
+        </aside>
+    
+        <!-- Main Content -->
+        <main class="content">
+            <h2>Forum Posts</h2>
+            <div id="post-feed">Loading posts...</div>
+        </main>
+    
+        <!-- Private Messages Section -->
+        <aside class="messages">
+            <h2>Private Messages</h2>
+            <div id="message-list">
+                <p>No messages yet.</p>
+            </div>
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </aside>
+    </div>
+    
 </body>
 </html>
