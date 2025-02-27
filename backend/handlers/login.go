@@ -14,33 +14,32 @@ import (
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("login")
+	var pasw string
+	var user_id int
+	
 	if r.Method != http.MethodPost {
-		jsonResponse(w, http.StatusMethodNotAllowed, "Invalid request method",nil)
+		jsonResponse(w, http.StatusMethodNotAllowed, "Invalid request method", nil)
 		return
 	}
 
 	var user models.LoginCredentials
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		jsonResponse(w, http.StatusBadRequest, "error :",err)
-		 fmt.Println(err)
+		jsonResponse(w, http.StatusBadRequest, "error :", err)
+		fmt.Println(err)
 		return
 	}
 
-	// Retrieve the hashed password from database
-	var pasw string
-	var user_id int
-	err = database.DB.QueryRow("SELECT password, id FROM users WHERE email = ?", user.Email).Scan(&pasw, &user_id)
+	err = database.DB.QueryRow("SELECT password, id FROM users WHERE nickname = ? OR email = ?", user.Email,user.Email).Scan(&pasw, &user_id)
 	if err != nil {
-		fmt.Println("pasw:", pasw , "  user id :", user_id , "error : ",err)
-		jsonResponse(w, http.StatusUnauthorized, "User not found or incorrect email",nil)
+		//fmt.Println("pasw:", pasw, "  user id :", user_id, "error : ", err)
+		jsonResponse(w, http.StatusUnauthorized, "User not found or incorrect email", nil)
 		return
 	}
 	// Compare hashed password with provided password
 	err = tools.CheckPassword(pasw, user.Password)
 	if err != nil {
- 
-		jsonResponse(w, http.StatusUnauthorized, "Invalid password",nil)
+		jsonResponse(w, http.StatusUnauthorized, "Invalid password", nil)
 		return
 	}
 
@@ -48,7 +47,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	deleteQuery := "DELETE FROM sessions WHERE user_id = ?"
 	_, err = database.DB.Exec(deleteQuery, user_id)
 	if err != nil {
-		fmt.Println( "Error cleaning old sessions",err)
+		fmt.Println("Error cleaning old sessions", err)
 		return
 	}
 
@@ -60,7 +59,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Respond with success
-	 
-	jsonResponse(w, http.StatusOK, "Login successful",nil)
-	 
+
+	jsonResponse(w, http.StatusOK, "Login successful", nil)
+
 }
