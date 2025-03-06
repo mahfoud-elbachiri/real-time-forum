@@ -27,7 +27,7 @@ func CookieMaker(w http.ResponseWriter) string {
 	}
 
 	cookie := &http.Cookie{
-		Name:     "forum_session",
+		Name:     "session",
 		Value:    u.String(),
 		Path:     "/",
 		HttpOnly: true,
@@ -38,7 +38,7 @@ func CookieMaker(w http.ResponseWriter) string {
 }
 
 func ValidateCookie(db *sql.DB, w http.ResponseWriter, r *http.Request) (int, error) {
-	cookie, err := r.Cookie("forum_session")
+	cookie, err := r.Cookie("session")
 	if err != nil {
 		return 0, err
 	}
@@ -58,7 +58,7 @@ func ValidateCookie(db *sql.DB, w http.ResponseWriter, r *http.Request) (int, er
 
 func isLoged(db *sql.DB, r *http.Request) int {
 	var user_id int
-	cookie, err := r.Cookie("forum_session")
+	cookie, err := r.Cookie("session")
 	
 	if err != nil {
 		user_id = 0

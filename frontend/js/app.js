@@ -37,7 +37,7 @@ export async function Register() {
 
 
         try {
-            const response = await fetch("/register", {
+            const response = await fetch("/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(obj),
@@ -60,32 +60,70 @@ export async function Register() {
 
 
 export async function Login() {
-        const obj2 = {
-            email : document.querySelector("#user").value,
-            password : document.querySelector("#password").value
-        }
-        try {
-            const response = await fetch ("/login" , {
-                method : "POST",
-                headers : {"Content-Type": "application/json"},
-                body :  JSON.stringify(obj2)
-            })
+    const obj2 = {
+        email: document.querySelector("#user").value,
+        password: document.querySelector("#password").value
+    }
+    
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(obj2)
+        });
 
-            const result = await response.json()
-            console.log("Response:", result);
+        const result = await response.json();
+        console.log("Response:", result);
 
-            if (!response.ok) {
-                throw new Error(result.message)
-            }
-
-            showpopup("Registered successfully!", "success");
-            navigateTo("home")
-            console.log("move");
-            
-        }catch (error){
-            console.log("errorrr",error);  
-            showpopup(error.message, "error");
+        if (!response.ok) {
+            throw new Error(result.message);
         }
 
+        showpopup("Login successful!", "success");
+        navigateTo("/"); // Navigate to home page
+    } catch (error) {
+        console.log("Error:", error);  
+        showpopup(error.message, "error");
+    }
 }
 
+ 
+export async function checkSession() {
+    try {
+        const response = await fetch("/checksession", {
+            method: "GET",
+            credentials: "include",
+        });
+       // console.log("message : ",response.message);
+        
+        if (response.ok) {
+            return true; // User has valid session
+        } else {
+            return false; // User is not logged in
+        }
+    } catch (error) {
+        console.error("Session check error:", error);
+        return false;  
+    }
+}
+ 
+export async function logout() {
+    try {
+        const response = await fetch("/api/logout", {
+            method: "POST"
+        });
+        
+        if (response.ok) {
+            showpopup("Logged out successfully", "success");
+        } else {
+            const result = await response.json();
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error("Logout error:", error);
+        showpopup(error.message, "error");
+    } finally {
+        // always navigate to login page after logout 
+        navigateTo("login");
+    }
+}

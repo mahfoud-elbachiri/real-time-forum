@@ -13,7 +13,7 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("forum_session")
+	cookie, err := r.Cookie("session")
 	if err != nil {
 		http.Error(w, "No active session found", http.StatusUnauthorized)
 		return
@@ -29,7 +29,7 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("rows :", rows)
 
 	http.SetCookie(w, &http.Cookie{
-		Name:   "forum_session",
+		Name:   "session",
 		Value:  "",
 		Path:   "/",
 		MaxAge: -1,
