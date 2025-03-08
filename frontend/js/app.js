@@ -25,9 +25,8 @@ export async function Register() {
         let hasError = Object.keys(fields).some(field => {
             const { value, condition, message } = fields[field];
             if (!value || condition) {
-                document.getElementById(fiefetchPostsld).value = "";
+                document.getElementById(field).value = "";
                 showError(field, message);
-
                 return true;
             }
             return false;
@@ -80,7 +79,7 @@ export async function Login() {
         }
 
         showpopup("Login successful!", "success");
-        navigateTo("/"); // Navigate to home page
+        navigateTo("/"); 
     } catch (error) {
         console.log("Error:", error);  
         showpopup(error.message, "error");
@@ -131,7 +130,7 @@ export async function logout() {
 
 export async function fetchPosts() {
     let respons
-     
+    const divpost = document.querySelector(".post-feed")
     try {
 
         respons = await fetch ("/api/fetchposts" , {
@@ -139,27 +138,33 @@ export async function fetchPosts() {
 
         })
      
- 
-        var data = await respons.json(); // Wait for the JSON to resolve
- 
+        var data = await respons.json(); 
+        console.log("data:",data);
         if (!respons.ok) {
-           console.log("erro fetching");
+        console.log("erro fetching");
         }
 
     }catch (error) {
         showpopup(error.message)  
     } 
 
-   const divpost = document.querySelector(".post-feed")
-   console.log(divpost);
+   
+   console.log("ddiv",divpost);
    
 
    data.forEach(element => {
-     // divpost.innerHTML = element
-        
-   });
     
-    
+      const divv = document.createElement('div')
+      divv.innerHTML =  ` <h2>${element.title}</h2>
+                       <p>${element.content}</p>
+                       `
+     
+      divv.className = "po"
+     
+      divpost.appendChild(divv)
+      
+   })
+
 }
 
  

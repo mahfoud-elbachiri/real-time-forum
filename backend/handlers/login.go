@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -37,7 +36,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusUnauthorized, "User not found or incorrect email", nil)
 		return
 	}
-	 
+
 	err = tools.CheckPassword(pasw, user.Password)
 	if err != nil {
 		jsonResponse(w, http.StatusUnauthorized, "Invalid password", nil)
@@ -59,52 +58,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Respond with success
+
 
 	jsonResponse(w, http.StatusOK, "Login successful", nil)
-}
-
-// CheckSessionHandler verifies if a user has a valid session
-func CheckSessionHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("wslaaaaaat")
-	if r.Method != http.MethodGet {
-		jsonResponse(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
-		return
-	}
-
-	 
-	cookie, err := r.Cookie("session")
-	if err != nil {
-		 
-		jsonResponse(w, http.StatusUnauthorized, "No session found", nil)
-		return
-	}
-	fmt.Println("koki:", cookie.Value)
-	 
-	var userID int
-	var expiry time.Time
-	err = database.DB.QueryRow("SELECT user_id, exp_date FROM sessions WHERE session = ?", cookie.Value).Scan(&userID, &expiry)
-	if err != nil {
-		jsonResponse(w, http.StatusOK, "Session valid", nil)
-		if err == sql.ErrNoRows {
-			// Session not found in database
-			jsonResponse(w, http.StatusUnauthorized, "Invalid session", nil)
-		} else {
-			// Database error
-			jsonResponse(w, http.StatusInternalServerError, "Error verifying session", nil)
-		}
-		return
-	}
-
-	// Check if session has expired
-	if time.Now().After(expiry) {
-		// Delete expired session
-		database.DB.Exec("DELETE FROM sessions WHERE session = ?", cookie.Value)
-		jsonResponse(w, http.StatusUnauthorized, "Session expired", nil)
-		return
-	}
-
-	// Session is valid
-	 
-	jsonResponse(w, http.StatusOK, "Session valid", nil)
 }

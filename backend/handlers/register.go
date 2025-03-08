@@ -14,20 +14,20 @@ import (
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("registerr")
+
 	var user models.User
 	if r.Method != http.MethodPost {
 		jsonResponse(w, http.StatusMethodNotAllowed, "Method not allowed",nil)
 		return
 	}
-	fmt.Println("wslet")
+
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		jsonResponse(w, http.StatusBadRequest, "invalid input",nil)
 		return
 	}
-	fmt.Println(user)
+
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -62,7 +62,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("last user :", user_id)
+	
 
 	cookie := app.CookieMaker(w)
 	err3 := app.InsretCookie(database.DB, int(user_id), cookie, time.Now().Add(time.Hour*24))

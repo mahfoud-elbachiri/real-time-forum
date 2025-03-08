@@ -11,14 +11,10 @@ func HandleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	
 	if strings.HasPrefix(r.URL.Path, "/api/") {
-		
 		http.NotFound(w, r)
 		return
 	}
-
-	// For all non-API paths, serve the index.html file
 
 	http.ServeFile(w, r, "frontend/public/login.html")
 }

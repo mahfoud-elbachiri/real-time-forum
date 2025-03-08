@@ -1,7 +1,7 @@
 import { Register, Login, checkSession, logout,fetchPosts } from '/frontend/js/app.js';
 
 
-// Define which routes are public (don't require login)
+
 const publicRoutes = ["/login", "/register"];
 
 // Add event listeners
@@ -71,7 +71,7 @@ export function navigateTo(page) {
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="emapostsil" required>
+          <input type="email" id="email" required>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -151,7 +151,7 @@ export function navigateTo(page) {
   const stylo = document.getElementById('page-style');
   if (stylo) {
     if (page === "/") {
-      
+      fetchPosts()
       stylo.href = `/frontend/css/home.css`;
     } else {
       stylo.href = `/frontend/css/${page}.css`;
@@ -202,7 +202,7 @@ async function router() {
   let page = routes[path] || "404";
 
   const isLoggedIn = await checkSession();
-    console.log("e" ,isLoggedIn);
+    
  
   if (!publicRoutes.includes(path) && !isLoggedIn) {
     console.log("not logged in");
@@ -219,13 +219,12 @@ async function router() {
   navigateTo(page);
 }
 
- function init() {
+ //function init() {
 
   addListeners();
   window.addEventListener("popstate", router);
   router();
-
   
-}
- 
-init();
+//}
+ //fetchPosts()
+//init();
