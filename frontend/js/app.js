@@ -157,10 +157,10 @@ export async function fetchPosts() {
       const divv = document.createElement('div')
       divv.innerHTML =  ` <h2>${element.title}</h2>
                        <p>${element.content}</p>
+                       
                        `
      
-      divv.className = "po"
-     
+      divv.className = "poo"
       divpost.appendChild(divv)
       
    })

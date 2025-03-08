@@ -114,9 +114,15 @@
 .messages button:hover {
     background: #218838;
 }
-.po {
-    background-color: #f1f1f1;
-    border-radius: 8px;
+.poo {
+    background-color:#dfdddd;
+    border-radius: 10px;
     padding: 8px;
     margin: 40px;
+   
+      
+}
+
+.poo:hover {
+    background-color: #b39f9a;
 }
