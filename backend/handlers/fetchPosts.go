@@ -30,7 +30,7 @@ func FetchPosts(w http.ResponseWriter , r *http.Request){
 
 	for rows.Next() {
 		fmt.Println(post)
-	err := 	rows.Scan(&post.UserID,&post.Title,&post.Content,&post.Category,&post.CreatedAt)
+	err := 	rows.Scan(&post.ID,&post.UserID,&post.Title,&post.Content,&post.Category,&post.CreatedAt)
 	if err != nil {
 		fmt.Println("HNA2",err)
 		http.Error(w, "internal server error" , http.StatusInternalServerError)

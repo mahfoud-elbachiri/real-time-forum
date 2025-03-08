@@ -25,7 +25,7 @@ export async function Register() {
         let hasError = Object.keys(fields).some(field => {
             const { value, condition, message } = fields[field];
             if (!value || condition) {
-                document.getElementById(field).value = "";
+                document.getElementById(fiefetchPostsld).value = "";
                 showError(field, message);
 
                 return true;
@@ -94,12 +94,12 @@ export async function checkSession() {
             method: "GET",
             credentials: "include",
         });
-       // console.log("message : ",response.message);
+      
         
         if (response.ok) {
-            return true; // User has valid session
+            return true;  
         } else {
-            return false; // User is not logged in
+            return false;  
         }
     } catch (error) {
         console.error("Session check error:", error);
@@ -130,22 +130,36 @@ export async function logout() {
 
 
 export async function fetchPosts() {
-
+    let respons
+     
     try {
 
-        const response = await fetch ("/api/fetchposts" , {
+        respons = await fetch ("/api/fetchposts" , {
          headers: { "Content-Type": "application/json" },
 
         })
-
-        if (!response.ok) {
-        console.log("erro fetching");
-         
+     
+ 
+        var data = await respons.json(); // Wait for the JSON to resolve
+ 
+        if (!respons.ok) {
+           console.log("erro fetching");
         }
 
     }catch (error) {
         showpopup(error.message)  
-    }
+    } 
 
+   const divpost = document.querySelector(".post-feed")
+   console.log(divpost);
+   
+
+   data.forEach(element => {
+     // divpost.innerHTML = element
+        
+   });
+    
     
 }
+
+ 

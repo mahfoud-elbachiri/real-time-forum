@@ -107,7 +107,7 @@ export function navigateTo(page) {
         <!-- Main Content -->
         <main class="content">
           <h2>Forum Posts</h2>
-          <div id="post-feed">Loading posts...</div>
+          <div class="post-feed">Loading posts...</div>
         </main>
       
         <!-- Private Messages Section -->
@@ -117,7 +117,7 @@ export function navigateTo(page) {
             <p>No messages yet.</p>
           </div>
           <input type="text" id="messageInput" placeholder="Type a message...">
-          <button onclick="sendMessage()">Send</button>
+          <button onclick="fetchPosts()">Send</button>
         </aside>
       </div>
     `;
@@ -142,20 +142,22 @@ export function navigateTo(page) {
            
   }
  
+
+  const app = document.getElementById('app');
+  if (app) {
+    app.innerHTML = content;
+  }
+
   const stylo = document.getElementById('page-style');
   if (stylo) {
     if (page === "/") {
+      
       stylo.href = `/frontend/css/home.css`;
     } else {
       stylo.href = `/frontend/css/${page}.css`;
     }
   }
 
- 
-  const app = document.getElementById('app');
-  if (app) {
-    app.innerHTML = content;
-  }
 
   
   window.history.pushState({ page: page }, "", page);
@@ -201,34 +203,29 @@ async function router() {
 
   const isLoggedIn = await checkSession();
     console.log("e" ,isLoggedIn);
-    
-  // Enforce authentication for non-public routes
+ 
   if (!publicRoutes.includes(path) && !isLoggedIn) {
-    console.log("Not logged in, redirecting to login");
+    console.log("not logged in");
     page = "login";
     window.history.replaceState({ page: page }, "", "/login");
   }
-  
-  // Handle login redirect when already logged in
+ 
   if (isLoggedIn && publicRoutes.includes(path)) {
-    console.log("Already logged in, redirecting to home");
+    console.log("lready logged in");
     page = "/";
     window.history.replaceState({ page: page }, "", "/");
   }
   
-  
- 
   navigateTo(page);
 }
 
  function init() {
+
   addListeners();
-  
-  
   window.addEventListener("popstate", router);
-  
   router();
-  fetchPosts()
+
+  
 }
  
 init();
