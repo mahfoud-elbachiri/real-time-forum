@@ -127,3 +127,25 @@ export async function logout() {
         navigateTo("login");
     }
 }
+
+
+export async function fetchPosts() {
+
+    try {
+
+        const response = await fetch ("/api/fetchposts" , {
+         headers: { "Content-Type": "application/json" },
+
+        })
+
+        if (!response.ok) {
+        console.log("erro fetching");
+         
+        }
+
+    }catch (error) {
+        showpopup(error.message)  
+    }
+
+    
+}

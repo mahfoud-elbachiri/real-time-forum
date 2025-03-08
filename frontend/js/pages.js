@@ -1,4 +1,4 @@
-import { Register, Login, checkSession, logout } from '/frontend/js/app.js';
+import { Register, Login, checkSession, logout,fetchPosts } from '/frontend/js/app.js';
 
 
 // Define which routes are public (don't require login)
@@ -71,7 +71,7 @@ export function navigateTo(page) {
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" required>
+          <input type="email" id="emapostsil" required>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -228,6 +228,7 @@ async function router() {
   window.addEventListener("popstate", router);
   
   router();
+  fetchPosts()
 }
  
 init();

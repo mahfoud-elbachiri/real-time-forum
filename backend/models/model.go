@@ -32,7 +32,7 @@ type Session struct {
 }
 
 type Post struct {
-	ID        string    `json:"id"`
+	ID        int    `json:"id"`
 	UserID    string    `json:"user_id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`

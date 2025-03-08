@@ -49,7 +49,7 @@ func InitSchema() {
         );`,
 
 		`CREATE TABLE IF NOT EXISTS posts (
-            id TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id TEXT NOT NULL,
             title TEXT NOT NULL,
             content TEXT NOT NULL,
