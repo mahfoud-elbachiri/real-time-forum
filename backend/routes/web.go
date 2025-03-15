@@ -7,14 +7,13 @@ import (
 )
 
 func WebRoutes() {
-	 
+	 http.HandleFunc("/ws", handlers.HandleConnections)
 	http.HandleFunc("/api/login", handlers.LoginHandler)
 	http.HandleFunc("/api/register", handlers.RegisterHandler)
 	http.HandleFunc("/api/logout", handlers.LogOutHandler)  
 	http.HandleFunc("/api/fetchposts", handlers.FetchPosts)  
- 
 	http.HandleFunc("/checksession", handlers.CheckSessionHandler)
-	
- 
 	http.HandleFunc("/", handlers.HandleHome)
+	http.HandleFunc("/api/users", handlers.GetUsers)
+
 }

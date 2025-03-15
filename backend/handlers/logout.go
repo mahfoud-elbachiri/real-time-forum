@@ -21,12 +21,10 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 
 	sessionID := cookie.Value
 	query := `DELETE FROM sessions WHERE session = ?`
-	res, err := database.DB.Exec(query, sessionID)
+	_, err = database.DB.Exec(query, sessionID)
 	if err != nil {
 		fmt.Println("error executing the query")
 	}
-	rows, _ := res.RowsAffected()
-	fmt.Println("rows :", rows)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
@@ -35,5 +33,6 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		MaxAge: -1,
 	})
 
+	// Removeconn()
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

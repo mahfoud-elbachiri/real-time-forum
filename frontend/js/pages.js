@@ -1,9 +1,9 @@
-import { Register, Login, checkSession, logout,fetchPosts } from '/frontend/js/app.js';
-
+import { Register, Login, checkSession, logout,fetchPosts, openChatPopup, afficher_users, closechat, createWebSockets } from '/frontend/js/app.js';
+// const socket = new WebSocket('ws://localhost:8005/ws');
 
 
 const publicRoutes = ["/login", "/register"];
-
+let nchat = 0
 // Add event listeners
 function addListeners() {
   document.body.addEventListener("click", function (event) {
@@ -21,12 +21,22 @@ function addListeners() {
     }
     else if (event.target.matches(".logout-btn")) {
       logout();
+    }else if (event.target.matches(".user-item")){
+      if (nchat < 3){
+        
+        const userNickname = event.target.textContent.trim()
+        openChatPopup(userNickname)
+        nchat += 1
+      }
+    }else if (event.target.matches(".chat-x")){
+      closechat(event.target.id)
+      nchat -= 1
     }
   });
 }
 
 // Navigation function
-export function navigateTo(page) {
+export async function navigateTo(page) {
   let content = "";
   
   if (page === "login") {
@@ -84,7 +94,7 @@ export function navigateTo(page) {
   }
   else if (page === "/") {
     content = `
-      <div class="home-container">
+    <div class="home-container">
         <!-- Sidebar -->
         <aside class="sidebar">
           <h2>Forum Menu</h2>
@@ -112,17 +122,18 @@ export function navigateTo(page) {
       
         <!-- Private Messages Section -->
         <aside class="messages">
-          <h2>Private Messages</h2>
-          <div id="message-list">
-            <p>No messages yet.</p>
+  <h2>Private Messages</h2>
+   <div id="allusers">
+          <div id="users"></div>
           </div>
-          <input type="text" id="messageInput" placeholder="Type a message...">
-          <button onclick="fetchPosts()">Send</button>
-        </aside>
-      </div>
-    `;
-  }else if (page === "404"){
-   `    
+          </aside>
+          <div id="chat-container"></div>
+
+          </div>
+          <p></p>
+          `;
+        }else if (page === "404"){
+          `    
    
    <div id="loginform">
         <div class="container">
@@ -141,24 +152,25 @@ export function navigateTo(page) {
            `
            
   }
- 
-
+  
+  
   const app = document.getElementById('app');
   if (app) {
     app.innerHTML = content;
   }
-
+  
   const stylo = document.getElementById('page-style');
   if (stylo) {
     if (page === "/") {
       fetchPosts()
+      await afficher_users()
+      createWebSockets()
       stylo.href = `/frontend/css/home.css`;
     } else {
       stylo.href = `/frontend/css/${page}.css`;
     }
-  }
-
-
+  }      
+  
   
   window.history.pushState({ page: page }, "", page);
 }
@@ -192,8 +204,6 @@ const routes = {
  
 async function router() {
   let path = window.location.pathname;
-  console.log("path : " ,path);
-  
 
   if (path !== "/" && path.endsWith("/")) {
     path = path.slice(0, -1);

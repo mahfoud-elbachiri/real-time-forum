@@ -13,7 +13,6 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("login")
 	var pasw string
 	var user_id int
 

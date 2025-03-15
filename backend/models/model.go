@@ -66,3 +66,7 @@ type LikedPost struct {
 	PostID int `json:"post_id"`
 	UserID int `json:"user_id"`
 }
+
+type Nickname struct {
+	Username string `json:"nickname"`
+}
