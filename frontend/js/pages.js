@@ -1,6 +1,5 @@
-import { Register, Login, checkSession, logout,fetchPosts, openChatPopup, afficher_users, closechat, createWebSockets } from '/frontend/js/app.js';
-// const socket = new WebSocket('ws://localhost:8005/ws');
-
+import { Register, Login, checkSession, logout, fetchPosts } from '/frontend/js/app.js';
+import { openChatPopup, afficher_users, closechat, createWebSockets} from '/frontend/js/wbs.js'
 
 const publicRoutes = ["/login", "/register"];
 let nchat = 0
@@ -174,24 +173,6 @@ export async function navigateTo(page) {
   
   window.history.pushState({ page: page }, "", page);
 }
-/*
-// Make these global so they can be called from HTML
-window.createPost = function() {
-  console.log("Create post function called");
-  // Implement post creation logic
-};
-
-window.filterPosts = function(filter) {
-  console.log("Filter posts:", filter);
-  // Implement post filtering logic
-};
-
-window.sendMessage = function() {
-  const message = document.getElementById('messageInput').value;
-  console.log("Sending message:", message);
-  // Implement message sending logic
-};
-*/
 
  
 const routes = {
@@ -205,12 +186,12 @@ const routes = {
 async function router() {
   let path = window.location.pathname;
 
-  if (path !== "/" && path.endsWith("/")) {
+  if (path !== "/" && path.endsWith("/") ) {
     path = path.slice(0, -1);
   }
-
+  // console.log(path);
+  
   let page = routes[path] || "404";
-
   const isLoggedIn = await checkSession();
     
  

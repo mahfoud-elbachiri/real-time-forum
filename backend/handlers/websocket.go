@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -17,6 +18,7 @@ import (
 )
 
 type dbmsg struct {
+	id       int
 	sender   string
 	receiver string
 	content  string
@@ -37,6 +39,8 @@ type Message struct {
 	Type     string `json:"type"`
 	Receiver string `json:"reciver"`
 	Msg      string `json:"msg"`
+	Offset   int    `json:"offset"`
+	Limit    int    `json:"limit"`
 }
 
 var (
@@ -112,10 +116,8 @@ func enligneusers() {
 		Type:         "enligneusers",
 		Enligneusers: enligneusers,
 	}
-	// fmt.Println(connmap)
 	for _, v := range connmap {
 		v.conn.WriteJSON(data)
-		// fmt.Println(err)
 	}
 }
 
@@ -136,10 +138,12 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 
 		if receiverInfo, exists := connmap[msg.Receiver]; exists {
 			err := receiverInfo.conn.WriteJSON(map[string]interface{}{
-				"Type":   "message",
-				"Sender": userinfo.nickname,
-				"msg":    msg.Msg,
-				"time":   time.Now().Format("2006-01-02 15:04:05"),
+				"Type":     "message",
+				"Sender":   userinfo.nickname,
+				"Receiver": msg.Receiver,
+				"msg":      msg.Msg,
+				"time":     time.Now().Format("2006-01-02 15:04:05"),
+				"newmsg": true,
 			})
 			if err != nil {
 				log.Println("Error sending message to receiver:", err)
@@ -157,32 +161,34 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			log.Println("Error sending message confirmation to sender:", err)
 		}
 	} else if msg.Type == "get-message" {
-
-		query := `SELECT sender, receiver, content, created_at FROM messages 
-		WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)`
-		rows, err := database.DB.Query(query, userinfo.nickname, msg.Receiver, userinfo.nickname, msg.Receiver)
+		query := `SELECT id, sender, receiver, content, created_at FROM messages 
+          WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)
+          ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`
+		rows, err := database.DB.Query(query, userinfo.nickname, msg.Receiver, userinfo.nickname, msg.Receiver, msg.Limit, msg.Offset)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+
 		var allmsg []dbmsg
 		for rows.Next() {
 			var msg dbmsg
-			if err := rows.Scan(&msg.sender, &msg.receiver, &msg.content, &msg.date); err != nil {
+			if err := rows.Scan(&msg.id, &msg.sender, &msg.receiver, &msg.content, &msg.date); err != nil {
 				log.Println("Error scanning row:", err)
-				continue // Skip this row on error and continue with the next one
+				continue
 			}
-			allmsg = append(allmsg, msg) // This should be outside the error condition
+			allmsg = append(allmsg, msg)
 		}
+
+		hasMoreMessages := len(allmsg) >= msg.Limit
 		if err = rows.Err(); err != nil {
 			log.Println("Error iterating through rows:", err)
 			return
 		}
-
-		// Convert allmsg to a format suitable for JSON
 		var messageData []map[string]string
 		for _, message := range allmsg {
 			messageData = append(messageData, map[string]string{
+				"id":       strconv.Itoa(message.id),
 				"sender":   message.sender,
 				"receiver": message.receiver,
 				"content":  message.content,
@@ -190,12 +196,12 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			})
 		}
 
-		// Send all messages to the client (userinfo, not receiverInfo)
 		err = userinfo.conn.WriteJSON(map[string]interface{}{
-			"Type":     "chat-history",
-			"ChatWith": msg.Receiver,
-			"username": userinfo.nickname,
-			"Messages": messageData,
+			"Type":            "chat-history",
+			"ChatWith":        msg.Receiver,
+			"username":        userinfo.nickname,
+			"Messages":        messageData,
+			"hasMoreMessages": hasMoreMessages, // Add this line
 		})
 		if err != nil {
 			log.Println("Error sending message history to client:", err)

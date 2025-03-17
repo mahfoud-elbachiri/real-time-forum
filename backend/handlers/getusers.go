@@ -11,37 +11,6 @@ import (
 	"real-time-forum/database"
 )
 
-// func Getusers(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("aaaa")
-// 	if r.Method != "POST" {
-// 		jsonResponse(w, http.StatusMethodNotAllowed, http.StatusText(http.StatusMethodNotAllowed), nil)
-// 		return
-// 	}
-// 	if strings.HasPrefix(r.URL.Path, "api/") {
-// 		http.NotFound(w, r)
-// 		return
-// 	}
-// 	rows, err := database.DB.Query("SELECT nickname FROM users")
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			jsonResponse(w, http.StatusUnauthorized, "Invalid session", nil)
-// 		}
-// 		return
-// 	}
-// 	defer rows.Close()
-// 	var nicknames []models.Nickname
-// 	for rows.Next() {
-// 		var name models.Nickname
-// 		 err := rows.Scan(&name)
-// 		 fmt.Println(name)
-// 			if  err != nil  {
-// 				http.Error(w, "internal server error", http.StatusInternalServerError)
-// 			return
-// 			}
-// 			nicknames = append(nicknames, name)
-// 		}
-// }
-
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)

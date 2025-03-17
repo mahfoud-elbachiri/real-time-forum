@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
-
 	"real-time-forum/backend/app"
 	"real-time-forum/backend/models"
 	"real-time-forum/backend/tools"
 	"real-time-forum/database"
+	"time"
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -56,8 +55,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-
-
 
 	jsonResponse(w, http.StatusOK, "Login successful", nil)
 }

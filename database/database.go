@@ -67,11 +67,12 @@ func InitSchema() {
             FOREIGN KEY (user_id) REFERENCES users(id)
         );`,
 		`CREATE TABLE IF NOT EXISTS messages (
-            sender TEXT NOT NULL,
-            receiver TEXT NOT NULL,
-            content TEXT NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        );`,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender TEXT NOT NULL,
+    receiver TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);`,
 		`CREATE TABLE IF NOT EXISTS disliked_posts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             post_id INTEGER NOT NULL,
@@ -96,6 +97,3 @@ func InitSchema() {
 		}
 	}
 }
-
-
-
