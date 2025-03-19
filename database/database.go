@@ -38,7 +38,6 @@ func InitSchema() {
             last_name TEXT NOT NULL,
             age INTEGER NOT NULL,
             gender TEXT NOT NULL
-         
         );`,
 		`CREATE TABLE IF NOT EXISTS sessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,22 +70,9 @@ func InitSchema() {
     sender TEXT NOT NULL,
     receiver TEXT NOT NULL,
     content TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    read_status BOOLEAN DEFAULT true
 );`,
-		`CREATE TABLE IF NOT EXISTS disliked_posts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            post_id INTEGER NOT NULL,
-            user_id INTEGER NOT NULL,
-            FOREIGN KEY(post_id) REFERENCES posts(id),
-            FOREIGN KEY(user_id) REFERENCES users(id)
-        );`,
-		`CREATE TABLE IF NOT EXISTS liked_posts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            post_id INTEGER NOT NULL,
-            user_id INTEGER NOT NULL,
-            FOREIGN KEY(post_id) REFERENCES posts(id),
-            FOREIGN KEY(user_id) REFERENCES users(id)
-        );`,
 	}
 
 	database := GetDB()

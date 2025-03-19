@@ -56,8 +56,6 @@ export async function Register() {
         showpopup(error.message, "error");
     }
 }
-
-
 export async function Login() {
     const obj2 = {
         email: document.querySelector("#user").value,
@@ -84,8 +82,6 @@ export async function Login() {
         showpopup(error.message, "error");
     }
 }
-
-
 export async function checkSession() {
     try {
         const response = await fetch("/checksession", {

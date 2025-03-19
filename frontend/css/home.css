@@ -359,3 +359,7 @@
   color: #65676b;
   margin-bottom: 2px;
 }
+
+#enligne.new-message, #ofligne.new-message {
+  background-color: gold;
+}

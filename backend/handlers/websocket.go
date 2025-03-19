@@ -143,7 +143,6 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 				"Receiver": msg.Receiver,
 				"msg":      msg.Msg,
 				"time":     time.Now().Format("2006-01-02 15:04:05"),
-				"newmsg": true,
 			})
 			if err != nil {
 				log.Println("Error sending message to receiver:", err)
@@ -161,6 +160,13 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			log.Println("Error sending message confirmation to sender:", err)
 		}
 	} else if msg.Type == "get-message" {
+		updateQuery := `UPDATE messages SET read_status = false 
+		WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)`
+		_, err := database.DB.Exec(updateQuery, userinfo.nickname, msg.Receiver, userinfo.nickname, msg.Receiver)
+		if err != nil {
+			log.Println("Error updating message read status:", err)
+			return
+		}
 		query := `SELECT id, sender, receiver, content, created_at FROM messages 
           WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)
           ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`
@@ -206,5 +212,7 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 		if err != nil {
 			log.Println("Error sending message history to client:", err)
 		}
+	} else if msg.Type == "open-chat" {
+
 	}
 }

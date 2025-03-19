@@ -32,6 +32,8 @@ export async function afficher_users() {
 
 // Open the chat popup with the selected user's nickname
 export function openChatPopup(username) {
+    const divbutton = document.querySelector(`.${username}`)
+    divbutton.classList.remove("new-message");
     if (document.getElementById('chat-' + username)) {
         return;
     }
@@ -210,8 +212,9 @@ function messagewbs(data){
     }else if (data.mymsg === undefined){
         let usersinfront = document.body.querySelectorAll(".user-item")
         usersinfront.forEach(user => {
-            if (data.Sender === user.textContent) {
-                user.classList.add("new-message")
+            if (data.Sender === user.textContent.trim()) {
+                const userdiv = document.getElementsByClassName(user.textContent)[0]
+                userdiv.classList.add("new-message")
             } 
         });
     }
