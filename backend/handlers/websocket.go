@@ -160,9 +160,10 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			log.Println("Error sending message confirmation to sender:", err)
 		}
 	} else if msg.Type == "get-message" {
-		updateQuery := `UPDATE messages SET read_status = false 
-		WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)`
-		_, err := database.DB.Exec(updateQuery, userinfo.nickname, msg.Receiver, userinfo.nickname, msg.Receiver)
+		updateQuery := `UPDATE messages 
+		SET read_status = false 
+		WHERE receiver = ? AND sender = ?`
+		_, err := database.DB.Exec(updateQuery, userinfo.nickname, msg.Receiver)
 		if err != nil {
 			log.Println("Error updating message read status:", err)
 			return
@@ -212,7 +213,7 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 		if err != nil {
 			log.Println("Error sending message history to client:", err)
 		}
-	} else if msg.Type == "open-chat" {
+	} else if msg.Type == "get-message" {
 
 	}
 }

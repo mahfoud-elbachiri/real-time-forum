@@ -69,4 +69,5 @@ type LikedPost struct {
 
 type Nickname struct {
 	Username string `json:"nickname"`
+	Unreadcount int `json:"unread_count"`
 }

@@ -20,6 +20,10 @@ export async function afficher_users() {
                 userElement.classList.add('user-item');
                 const statu = document.createElement('div');
                 statu.classList.add(`${user.nickname}`);
+                if (user.unread_count > 0) {
+
+                    statu.classList.add("new-message")
+                }
                 userElement.appendChild(statu);
                 usersDiv.appendChild(userElement);
             });

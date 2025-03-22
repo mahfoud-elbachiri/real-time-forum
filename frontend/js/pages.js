@@ -169,9 +169,14 @@ export async function navigateTo(page) {
       stylo.href = `/frontend/css/${page}.css`;
     }
   }      
+  if (history.length > 1) {
+    history.pushState({ page: page }, "", page)
+} else {
+    history.replaceState({ page: page }, "", page)
+}
+
   
-  
-  window.history.pushState({ page: page }, "", page);
+  // window.history.pushState({ page: page }, "", page);
 }
 
  
