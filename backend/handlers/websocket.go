@@ -135,7 +135,6 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			log.Println("Error inserting message into database:", err)
 			return
 		}
-
 		if receiverInfo, exists := connmap[msg.Receiver]; exists {
 			err := receiverInfo.conn.WriteJSON(map[string]interface{}{
 				"Type":     "message",
@@ -208,12 +207,32 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			"ChatWith":        msg.Receiver,
 			"username":        userinfo.nickname,
 			"Messages":        messageData,
-			"hasMoreMessages": hasMoreMessages, // Add this line
+			"hasMoreMessages": hasMoreMessages,
 		})
 		if err != nil {
 			log.Println("Error sending message history to client:", err)
 		}
-	} else if msg.Type == "get-message" {
-
+	} else if msg.Type == "typing" {
+		if receiverconn, exists := connmap[msg.Receiver]; exists {
+			err := receiverconn.conn.WriteJSON(map[string]interface{}{
+				"Type":     "typing",
+				"Sender":   userinfo.nickname,
+				"Receiver": msg.Receiver,
+			})
+			if err != nil {
+				log.Println("Error sending typing to receiver:", err)
+			}
+		}
+	} else if msg.Type == "stop_typing" {
+		if receiverconn, exists := connmap[msg.Receiver]; exists {
+			err := receiverconn.conn.WriteJSON(map[string]interface{}{
+				"Type":     "stop_typing",
+				"Sender":   userinfo.nickname,
+				"Receiver": msg.Receiver,
+			})
+			if err != nil {
+				log.Println("Error sending stop_typing to receiver:", err)
+			}
+		}
 	}
 }

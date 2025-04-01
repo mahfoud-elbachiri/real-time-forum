@@ -33,14 +33,17 @@ export async function afficher_users() {
         return false;
     }
 }
+let typingTimeouts = {};  // Timeout to detect when typing stops
+let typingStatus = {};  // Track if a user is currently marked as "typing"
 
-// Open the chat popup with the selected user's nickname
 export function openChatPopup(username) {
-    const divbutton = document.querySelector(`.${username}`)
+    const divbutton = document.querySelector(`.${username}`);
     divbutton.classList.remove("new-message");
+
     if (document.getElementById('chat-' + username)) {
         return;
     }
+
     const chatBox = document.createElement('div');
     chatBox.classList.add('chat-box');
     chatBox.id = 'chat-' + username;
@@ -49,9 +52,9 @@ export function openChatPopup(username) {
     chatHeader.classList.add('chat-header');
 
     const headerContent = document.createElement('div');
-    const userstatus = document.getElementsByClassName(username)[0]
+    const userstatus = document.getElementsByClassName(username)[0];
 
-    headerContent.innerHTML = `<span id= ${userstatus.id}-bot></span> ${username}`;
+    headerContent.innerHTML = `<span id=${userstatus.id}-bot></span> ${username}`;
 
     const x = document.createElement('div');
     x.classList.add('chat-x');
@@ -88,24 +91,61 @@ export function openChatPopup(username) {
     chatBox.appendChild(chatInput);
 
     document.getElementById('chat-container').appendChild(chatBox);
+
     textarea.addEventListener('input', function () {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight < 100) ? this.scrollHeight + 'px' : '100px';
+        this.style.height = 'auto'
+        this.style.height = (this.scrollHeight < 100) ? this.scrollHeight + 'px' : '100px'
+        handleTyping(username);
     });
 
     sendButton.addEventListener("click", function () {
         sendMessage(username, textarea);
+        clearTimeout(typingTimeouts[username])
+        stopTyping(username)
     });
 
     textarea.addEventListener("keypress", function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            sendMessage(username, textarea);
+            sendMessage(username, textarea)
+            clearTimeout(typingTimeouts[username])
+            stopTyping(username)
         }
     });
+
     setupScrollListener(username)
-    getmessagefromdb(username);
+    getmessagefromdb(username)
 }
+
+function handleTyping(username) {
+    if (!typingStatus[username]) {
+        typing(username)
+        typingStatus[username] = true;
+    }
+
+    clearTimeout(typingTimeouts[username])
+
+    typingTimeouts[username] = setTimeout(() => {
+        stopTyping(username);
+        typingStatus[username] = false
+    }, 2000)
+}
+
+function typing(username) {
+    websocket.send(JSON.stringify({
+        type: "typing",
+        reciver: username,
+    }));
+}
+
+function stopTyping(username) {
+    websocket.send(JSON.stringify({
+        type: "stop_typing",
+        reciver: username,
+    }));
+}
+
+
 function getmessagefromdb(username, offset = 0, limit = 10) {
     const data = {
         type: "get-message",
@@ -141,7 +181,6 @@ export function createWebSockets() {
     websocket.onmessage = function (event) {
 
         const data = JSON.parse(event.data);
-
         if (data.Type === "enligneusers") {
             usersenligne(data.Enligneusers);
         }
@@ -149,6 +188,29 @@ export function createWebSockets() {
             messagewbs(data)
         } else if (data.Type === "chat-history") {
             getOldMessages(data)
+        } else if (data.Type === "typing") {
+            console.log("kteb l " , data.Receiver, data.Sender, "kikteb lih");
+            const chatmessage = document.querySelector(`#chat-messages-${data.Sender}`)
+            const points = document.querySelector(".typing")
+            if (chatmessage && points === null) {
+                const typing = document.createElement("div")
+                typing.classList.add("typing")
+                const typingdot = document.createElement("div")
+                typingdot.classList.add("typing-dot")
+                typing.appendChild(typingdot)
+
+                const typingone = document.createElement("div")
+                typingone.classList.add("typing-dot")
+                typing.appendChild(typingone)
+
+                const typingtwo = document.createElement("div")
+                typingtwo.classList.add("typing-dot")
+                typing.appendChild(typingtwo)
+                chatmessage.appendChild(typing)
+                chatmessage.scrollTop = chatmessage.scrollHeight
+            }
+        }else if (data.Type === "stop_typing") {
+           document.querySelector(".typing").remove()
         }
     }
 }
