@@ -49,12 +49,6 @@ var (
 )
 
 func HandleConnections(w http.ResponseWriter, r *http.Request) {
-	mu.Lock()
-	ws, err := upgrader.Upgrade(w, r, nil)
-	mu.Unlock()
-	if err != nil {
-		log.Fatal(err)
-	}
 	cookie, err := r.Cookie("session")
 	if err != nil {
 		jsonResponse(w, http.StatusUnauthorized, "No session found", nil)
@@ -64,21 +58,32 @@ func HandleConnections(w http.ResponseWriter, r *http.Request) {
 
 	err = database.DB.QueryRow("SELECT user_id FROM sessions WHERE session = ?", cookie.Value).Scan(&userID)
 	if err != nil {
-		jsonResponse(w, http.StatusOK, "Session valid", nil)
 		if err == sql.ErrNoRows {
 			jsonResponse(w, http.StatusUnauthorized, "Invalid session", nil)
+		} else {
+			jsonResponse(w, http.StatusInternalServerError, "Database error", nil)
 		}
 		return
 	}
 	var nickname string
 	err = database.DB.QueryRow("SELECT nickname FROM users WHERE id =?", userID).Scan(&nickname)
 	if err != nil {
-		jsonResponse(w, http.StatusOK, "this is probleme in geting nickname from DB", nil)
 		if err == sql.ErrNoRows {
-			jsonResponse(w, http.StatusUnauthorized, "this is probleme in geting nickname from DB", nil)
+			jsonResponse(w, http.StatusUnauthorized, "User not found", nil)
+		} else {
+			jsonResponse(w, http.StatusInternalServerError, "Database error", nil)
 		}
 		return
 	}
+
+	mu.Lock()
+	ws, err := upgrader.Upgrade(w, r, nil)
+	mu.Unlock()
+	if err != nil {
+		log.Println("Upgrade error:", err)
+		return
+	}
+
 	var userinfo usersinfo
 	userinfo.id = userID
 	userinfo.nickname = nickname
