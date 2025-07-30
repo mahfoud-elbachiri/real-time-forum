@@ -145,7 +145,7 @@ export async function fetchPosts() {
     //     const divv = document.createElement('div')
     //     divv.innerHTML = ` <h2>${element.title}</h2>
     //                    <p>${element.content}</p>
-                       
+
     //                    `
 
     //     divv.className = "poo"
@@ -156,3 +156,100 @@ export async function fetchPosts() {
 }
 
 //============================================================================
+
+
+
+// Modal Logic for Create Post
+window.createPost = function () {
+    let modal = document.getElementById("create-post-modal");
+
+    // Inject modal if it doesn't exist
+    if (!modal) {
+        const modalHTML = `
+        <div id="create-post-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Create New Post</h2>
+                <form id="create-post-form">
+                    <div class="modal-form-group">
+                        <label for="post-title">Title</label>
+                        <input type="text" id="post-title" required>
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="post-category">Category</label>
+                        <select id="post-category" required>
+                            <option value="">Select Category</option>
+                            <option value="tech">Tech</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="modal-form-group">
+                        <label for="post-content">Content</label>
+                        <textarea id="post-content" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-primary">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        `;
+        document.body.insertAdjacentHTML("beforeend", modalHTML);
+        modal = document.getElementById("create-post-modal");
+
+        // Close logic
+        const span = modal.querySelector(".close-modal");
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Form Submit Logic
+        const form = document.getElementById("create-post-form");
+        form.onsubmit = async function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById("post-title").value;
+            const category = document.getElementById("post-category").value;
+            const content = document.getElementById("post-content").value;
+
+            const postData = {
+                title: title,
+                content: content,
+                category: category
+            };
+
+            try {
+                const response = await fetch("/api/createpost", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (response.ok) {
+                    alert("Post created successfully!");
+                    modal.style.display = "none";
+                    form.reset();
+                    fetchPosts(); // Refresh feed
+                } else {
+                    const result = await response.json();
+                    alert("Error: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error creating post:", error);
+                alert("Failed to create post");
+            }
+        }
+    }
+
+    modal.style.display = "block";
+};
+

@@ -38,6 +38,7 @@ type Post struct {
 	Content   string    `json:"content"`
 	Category  string    `json:"category"`
 	CreatedAt time.Time `json:"created_at"`
+	Author    string    `json:"author"`
 }
 
 type Comment struct {
