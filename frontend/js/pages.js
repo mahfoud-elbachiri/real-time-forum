@@ -1,4 +1,4 @@
-import { Register, Login, checkSession, logout, fetchPosts } from '/frontend/js/app.js';
+import { Register, Login, checkSession, logout, fetchPosts ,createcomment } from '/frontend/js/app.js';
 import { openChatPopup, afficher_users, closechat, createWebSockets} from '/frontend/js/wbs.js'
 
 const publicRoutes = ["/login", "/register"];
@@ -30,6 +30,9 @@ function addListeners() {
     }else if (event.target.matches(".chat-x")){
       closechat(event.target.id)
       nchat -= 1
+    }
+    else if (event.target.matches(".comment-btn")){
+      createcomment(event.target.id)
     }
   });
 }

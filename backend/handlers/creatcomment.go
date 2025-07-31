@@ -16,15 +16,13 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	 
 	cookie, err := r.Cookie("session")
 	if err != nil {
-	
+
 		jsonResponse(w, http.StatusUnauthorized, "No session found", nil)
 		return
 	}
 
-	 
 	var userID int
 
 	err = database.DB.QueryRow("SELECT user_id FROM sessions WHERE session = ?", cookie.Value).Scan(&userID)
@@ -52,7 +50,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusInternalServerError, "Error getting user information", err)
 		return
 	}
- 
+
 	postID, err := strconv.Atoi(comment.PostID)
 	if err != nil {
 		jsonResponse(w, http.StatusBadRequest, "Invalid post ID format", nil)
@@ -72,9 +70,9 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Insert the comment
+	// Insert the comment 
 	res, err := database.DB.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)",
-		comment.PostID, userID, comment.Content)
+		comment.PostID, strconv.Itoa(userID), comment.Content)
 	if err != nil {
 		fmt.Println("Error creating comment:", err)
 		jsonResponse(w, http.StatusInternalServerError, "Error creating comment", err)
@@ -87,26 +85,14 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the comment with creation timestamp
-	var createdComment models.Comment
-	err = database.DB.QueryRow(`
-		SELECT id, post_id, user_id, content, created_at 
-		FROM comments 
-		WHERE id = ?`,
-		commentID).Scan(
-		&createdComment.ID,
-		&createdComment.PostID,
-		&createdComment.UserID,
-		&createdComment.Content,
-		&createdComment.CreatedAt,
-	)
-	if err != nil {
-		jsonResponse(w, http.StatusInternalServerError, "Error retrieving created comment", err)
-		return
+	// Build the response directly
+	createdComment := models.Comment{
+		ID:      int(commentID),
+		PostID:  comment.PostID,
+		UserID:  fmt.Sprintf("%d", userID),
+		Content: comment.Content,
+		Author:  nickname,
 	}
-
-	 
-	createdComment.Author = nickname
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

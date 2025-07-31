@@ -1,6 +1,7 @@
 import { showError, clearErrors, showpopup, validateEmail } from '/frontend/js/error.js'
 import { navigateTo } from '/frontend/js/pages.js'
 import { getWebSocket } from '/frontend/js/wbs.js';
+window.currentUser = null;
 export async function Register() {
     clearErrors()
     const obj = {
@@ -57,11 +58,15 @@ export async function Register() {
     }
 }
 export async function Login() {
-    const obj2 = {
+    var obj2 = {
         email: document.querySelector("#user").value,
         password: document.querySelector("#password").value
     }
 
+    if (!obj2.email || !obj2.password) {
+        showpopup("Please fill in all fields");
+        return;
+    }
     try {
         const response = await fetch("/api/login", {
             method: "POST",
@@ -71,17 +76,18 @@ export async function Login() {
 
         const result = await response.json();
         if (!response.ok) {
-            throw new Error(result.message);
+            throw new Error("login ghalat");
         }
 
         showpopup("Login successful!", "success");
         navigateTo("/");
 
     } catch (error) {
-        console.log("Error:", error);
+        // console.log("Error:", error);
         showpopup(error.message, "error");
     }
 }
+
 export async function checkSession() {
     try {
         const response = await fetch("/checksession", {
@@ -89,10 +95,12 @@ export async function checkSession() {
             credentials: "include",
         });
 
-
         if (response.ok) {
+            const data = await response.json();
+            window.currentUser = data;
             return true;
         } else {
+            window.currentUser = null;
             return false;
         }
     } catch (error) {
@@ -111,13 +119,13 @@ export async function logout() {
             showpopup("Logged out successfully", "success");
             const websocket = getWebSocket();
             websocket.close()
-            websocket = null
+            // websocket = null 
         } else {
             const result = await response.json();
             throw new Error(result.message);
         }
     } catch (error) {
-        console.error("Logout error:", error);
+
         showpopup(error.message, "error");
     } finally {
         // always navigate to login page after logout 
@@ -127,129 +135,292 @@ export async function logout() {
 
 
 export async function fetchPosts() {
-    let respons
-    const divpost = document.querySelector(".post-feed")
+    let islogg = checkSession()
+
+    console.log("in fetch :", islogg.value);
+
+    const divpost = document.querySelector(".post-feed");
+    divpost.innerHTML = "<p>Loading posts...</p>";
+
     try {
-
-        respons = await fetch("/api/fetchposts", {
+        const response = await fetch("/api/fetchposts", {
             headers: { "Content-Type": "application/json" },
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch posts");
+        }
 
-        })
-        var data = await respons.json();
+        const data = await response.json();
+        if (data === null) {
+            divpost.innerHTML = "<p>No posts found. Be the first to create a post!</p>";
+            return;
+        }
+
+        // Clear loading message
+        divpost.innerHTML = "";
+
+        // Create posts
+        data.forEach((post) => {
+            // Format the date
+            const postDate = new Date(post.created_at);
+            const formattedDate = postDate.toLocaleString();
+
+            // Create the post element
+            const postElement = document.createElement("div");
+            postElement.className = "post-item";
+            postElement.dataset.postId = post.id;
+
+            // Create the post content HTML
+            postElement.innerHTML = `
+          <div class="post-header">
+            <h2>${post.title}</h2>
+            <div class="post-meta">
+              <span class="post-author">Posted by: ${post.author}</span>
+              <span class="post-date">Date: ${formattedDate}</span>
+              <span class="post-category">Category: ${post.category}</span>
+            </div>
+          </div>
+          <div class="post-content">
+            <pre>${post.content}</pre>
+          </div>
+          <div class="post-actions">
+            <button class="comment-toggle" data-post-id="${post.id}">💬 Comments</button>
+          </div>
+          <div class="comments-section" id="comments-${post.id}" style="display: none;">
+            <h3>Comments</h3>
+            <div class="comments-list" id="comments-list-${post.id}">
+              <p>Loading comments...</p>
+            </div>
+            <div class="add-comment">
+              <textarea class="comment" placeholder="Add your comment" id="comment-input-${post.id}"></textarea>
+              <button class="comment-submit" id="${post.id}">Submit</button>
+            </div>
+          </div>
+        `;
+
+            divpost.appendChild(postElement);
+
+            // Add event listener for comment toggle
+            const commentToggle = postElement.querySelector(".comment-toggle");
+            commentToggle.addEventListener("click", () => {
+                const commentsSection = document.getElementById(`comments-${post.id}`);
+                if (commentsSection.style.display === "none") {
+                    commentsSection.style.display = "block";
+                    // Fetch comments when the section is opened
+                    fetchComments(post.id);
+                } else {
+                    commentsSection.style.display = "none";
+                }
+            });
+
+            // Add event listener for comment submit button
+            const commentSubmit = postElement.querySelector(".comment-submit");
+            commentSubmit.addEventListener("click", () => {
+                createcomment(post.id);
+            });
+        });
 
     } catch (error) {
-        showpopup(error.message)
+        console.error("Error fetching posts:", error);
+        divpost.innerHTML = `<p>Error loading posts: ${error.message}</p>`;
+        showpopup(error.message, "error");
     }
-    // data.forEach(element => {
+}
 
-    //     const divv = document.createElement('div')
-    //     divv.innerHTML = ` <h2>${element.title}</h2>
-    //                    <p>${element.content}</p>
+export function createPost() {
+    const popup = document.createElement("div");
+    popup.className = "post-popup";
+    popup.innerHTML = `
+        <div class="post-popup-content">
+            <h2>Create New Post</h2>
+            <form id="post-form">
+                <input type="text" id="post-title" placeholder="Title" required>
+                <textarea id="post-content" placeholder="Content" rows="4" required></textarea>
+                
+                <div class="categories">
+                    <label><input type="checkbox" name="category" value="tech"> Tech</label>
+                    <label><input type="checkbox" name="category" value="gaming"> Gaming</label>
+                    <label><input type="checkbox" name="category" value="sports"> Sports</label>
+                    <label><input type="checkbox" name="category" value="music"> Music</label>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit">Post</button>
+                    <button type="button" class="cancel-post">Cancel</button>
+                </div>
+            </form>
+        </div>
+    `;
 
-    //                    `
+    document.body.appendChild(popup);
 
-    //     divv.className = "poo"
-    //     divpost.appendChild(divv)
+    document.querySelector(".cancel-post").addEventListener("click", closePoopup);
+    document.getElementById("post-form").addEventListener("submit", submitPost);
 
-    // })
+    const checkboxes = document.querySelectorAll('input[name="category"]');
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", function () {
+            checkboxes.forEach((cb) => {
+                if (cb !== this) cb.checked = false;
+            });
+        });
+    });
 
+    // Check the first category by default
+    checkboxes[0].checked = true;
+}
+
+export function closePoopup() {
+    const popup = document.querySelector(".post-popup");
+    if (popup) {
+        popup.remove();
+    }
+}
+
+export async function submitPost(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("post-title").value;
+    const content = document.getElementById("post-content").value;
+    const checkboxes = document.querySelectorAll(
+        'input[name="category"]:checked'
+    );
+    let category = "";
+    if (checkboxes.length > 0) {
+        category = checkboxes[0].value;
+    } else {
+        category = "general";
+    }
+
+    if (!title || !content) {
+        showpopup("Please fill in all fields");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/createpost", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, content, category }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+
+        closePoopup();
+        showpopup("Post created successfully!", "success");
+
+        fetchPosts();
+    } catch (error) {
+        console.error("Error creating post:", error);
+        showpopup(error.message || "Error creating post");
+    }
+}
+
+window.createPost = function () {
+    createPost();
+};
+
+
+export async function fetchComments(postId) {
+    const commentsList = document.getElementById(`comments-list-${postId}`);
+
+    if (!commentsList) return;
+
+    commentsList.innerHTML = "<p>Loading comments...</p>";
+
+    try {
+        const response = await fetch(`/api/comments?post_id=${postId}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include" // for the koki
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.message || "Failed to fetch comments");
+        }
+
+        const comments = await response.json();
+        if (comments !== null) {
+            if (comments.length === 0) {
+                commentsList.innerHTML = "<p>No comments yet. Be the first to comment!</p>";
+                return;
+            }
+
+            commentsList.innerHTML = "";
+
+            comments.forEach(comment => {
+                const commentDate = new Date(comment.created_at);
+                const formattedDate = commentDate.toLocaleString();
+
+                const commentElement = document.createElement("div");
+                commentElement.className = "comment-item";
+                commentElement.innerHTML = `
+      <div class="comment-header">
+        <span class="comment-author">${comment.author}</span>
+        <span class="comment-date">${formattedDate}</span>
+      </div>
+      <div class="comment-content">
+        <pre>${comment.content}</pre>
+      </div>
+    `;
+
+                commentsList.appendChild(commentElement);
+            });
+
+        }
+
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        commentsList.innerHTML = `<p>Error loading comments: ${error.message}</p>`;
+    }
+}
+
+
+export async function createcomment(postId) {
+    const commentInput = document.getElementById(`comment-input-${postId}`);
+    if (!commentInput) return;
+
+    const commentText = commentInput.value.trim();
+    if (!commentText) {
+        showpopup("Comment cannot be empty", "error");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/createcomment", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                post_id: postId.toString(),
+                content: commentText
+            }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to submit comment");
+        }
+
+
+        commentInput.value = "";
+
+
+        fetchComments(postId);
+
+        showpopup("Comment added successfully", "success");
+    } catch (error) {
+        console.error("Error submitting comment:", error);
+        showpopup(error.message, "error");
+    }
 }
 
 //============================================================================
-
-
-
-// Modal Logic for Create Post
-window.createPost = function () {
-    let modal = document.getElementById("create-post-modal");
-
-    // Inject modal if it doesn't exist
-    if (!modal) {
-        const modalHTML = `
-        <div id="create-post-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal">&times;</span>
-                <h2>Create New Post</h2>
-                <form id="create-post-form">
-                    <div class="modal-form-group">
-                        <label for="post-title">Title</label>
-                        <input type="text" id="post-title" required>
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="post-category">Category</label>
-                        <select id="post-category" required>
-                            <option value="">Select Category</option>
-                            <option value="tech">Tech</option>
-                            <option value="gaming">Gaming</option>
-                            <option value="sports">Sports</option>
-                        </select>
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="post-content">Content</label>
-                        <textarea id="post-content" required></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn-primary">Post</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        `;
-        document.body.insertAdjacentHTML("beforeend", modalHTML);
-        modal = document.getElementById("create-post-modal");
-
-        // Close logic
-        const span = modal.querySelector(".close-modal");
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Form Submit Logic
-        const form = document.getElementById("create-post-form");
-        form.onsubmit = async function (e) {
-            e.preventDefault();
-
-            const title = document.getElementById("post-title").value;
-            const category = document.getElementById("post-category").value;
-            const content = document.getElementById("post-content").value;
-
-            const postData = {
-                title: title,
-                content: content,
-                category: category
-            };
-
-            try {
-                const response = await fetch("/api/createpost", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(postData)
-                });
-
-                if (response.ok) {
-                    alert("Post created successfully!");
-                    modal.style.display = "none";
-                    form.reset();
-                    fetchPosts(); // Refresh feed
-                } else {
-                    const result = await response.json();
-                    alert("Error: " + result.message);
-                }
-            } catch (error) {
-                console.error("Error creating post:", error);
-                alert("Failed to create post");
-            }
-        }
-    }
-
-    modal.style.display = "block";
-};
-

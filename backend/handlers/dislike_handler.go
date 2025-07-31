@@ -1,0 +1,46 @@
+package handlers
+
+import (
+	"encoding/json"
+	"net/http"
+	"real-time-forum/database"
+)
+
+func DislikePost(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		jsonResponse(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
+		return
+	}
+
+	cookie, err := r.Cookie("session")
+	if err != nil {
+		jsonResponse(w, http.StatusUnauthorized, "No session found", nil)
+		return
+	}
+
+	var userID int
+	err = database.DB.QueryRow(
+		"SELECT user_id FROM sessions WHERE session = ?",
+		cookie.Value,
+	).Scan(&userID)
+	if err != nil {
+		jsonResponse(w, http.StatusUnauthorized, "Invalid session", nil)
+		return
+	}
+
+	var payload struct {
+		PostID int `json:"post_id"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		jsonResponse(w, http.StatusBadRequest, "Invalid request body", nil)
+		return
+	}
+
+	if err := database.ToggleDislike(database.DB, userID, payload.PostID); err != nil {
+		jsonResponse(w, http.StatusInternalServerError, "Failed to toggle dislike", nil)
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, "Dislike toggled successfully", nil)
+}

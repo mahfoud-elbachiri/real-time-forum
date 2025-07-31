@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"real-time-forum/backend/models"
 	"real-time-forum/database"
@@ -22,21 +21,15 @@ func FetchComments(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	postID, err := strconv.Atoi(postIDStr)
-	if err != nil {
-		jsonResponse(w, http.StatusBadRequest, "Invalid post ID", nil)
-		return
-	}
-
 	query := `
-		SELECT c.id, c.post_id, c.user_id, c.content, c.created_at, u.nickname
+		SELECT c.id, c.post_id, c.user_id, c.content, c.created_at, COALESCE(u.nickname, 'Unknown')
 		FROM comments c
-		JOIN users u ON c.user_id = u.id
+		LEFT JOIN users u ON CAST(c.user_id AS INTEGER) = u.id
 		WHERE c.post_id = ?
 		ORDER BY c.created_at ASC
 	`
 
-	rows, err := database.DB.Query(query, postID)
+	rows, err := database.DB.Query(query, postIDStr)
 	if err != nil {
 		fmt.Println("Error querying comments:", err)
 		jsonResponse(w, http.StatusInternalServerError, "Error fetching comments", nil)

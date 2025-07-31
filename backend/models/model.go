@@ -42,7 +42,7 @@ type Post struct {
 }
 
 type Comment struct {
-	ID        string    `json:"id"`
+	ID        int       `json:"id"`
 	PostID    string    `json:"post_id"`
 	UserID    string    `json:"user_id"`
 	Content   string    `json:"content"`
