@@ -21,6 +21,7 @@ export function showpopup(message, type = "error") {
     popup.style.display = "block";
     setTimeout(() => { popup.style.display = "none"; }, 3000);
 }
+
 export function validateEmail(email) {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,6}$/;
     return regex.test(email);

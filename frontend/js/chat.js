@@ -1,4 +1,5 @@
-let websocket
+// Chat module (WebSocket and messaging)
+let websocket;
 
 export async function afficher_users() {
     try {
@@ -7,13 +8,13 @@ export async function afficher_users() {
             credentials: "include",
         });
         if (!response.ok) {
-            throw new Error(result.message);
+            throw new Error("Failed to fetch users");
         }
         const users = await response.json();
         const usersDiv = document.getElementById('users');
-        usersDiv.innerHTML = ''
-        // console.log(users);
-        if (users != null){
+        usersDiv.innerHTML = '';
+
+        if (users != null) {
             users.forEach(user => {
                 const userElement = document.createElement('div');
                 userElement.textContent = user.nickname;
@@ -21,8 +22,7 @@ export async function afficher_users() {
                 const statu = document.createElement('div');
                 statu.classList.add(`${user.nickname}`);
                 if (user.unread_count > 0) {
-
-                    statu.classList.add("new-message")
+                    statu.classList.add("new-message");
                 }
                 userElement.appendChild(statu);
                 usersDiv.appendChild(userElement);
@@ -33,8 +33,9 @@ export async function afficher_users() {
         return false;
     }
 }
-let typingTimeouts = {};  // Timeout to detect when typing stops
-let typingStatus = {};  // Track if a user is currently marked as "typing"
+
+let typingTimeouts = {};
+let typingStatus = {};
 
 export function openChatPopup(username) {
     const divbutton = document.querySelector(`.${username}`);
@@ -93,42 +94,42 @@ export function openChatPopup(username) {
     document.getElementById('chat-container').appendChild(chatBox);
 
     textarea.addEventListener('input', function () {
-        this.style.height = 'auto'
-        this.style.height = (this.scrollHeight < 100) ? this.scrollHeight + 'px' : '100px'
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight < 100) ? this.scrollHeight + 'px' : '100px';
         handleTyping(username);
     });
 
     sendButton.addEventListener("click", function () {
         sendMessage(username, textarea);
-        clearTimeout(typingTimeouts[username])
-        stopTyping(username)
+        clearTimeout(typingTimeouts[username]);
+        stopTyping(username);
     });
 
     textarea.addEventListener("keypress", function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            sendMessage(username, textarea)
-            clearTimeout(typingTimeouts[username])
-            stopTyping(username)
+            sendMessage(username, textarea);
+            clearTimeout(typingTimeouts[username]);
+            stopTyping(username);
         }
     });
 
-    setupScrollListener(username)
-    getmessagefromdb(username)
+    setupScrollListener(username);
+    getmessagefromdb(username);
 }
 
 function handleTyping(username) {
     if (!typingStatus[username]) {
-        typing(username)
+        typing(username);
         typingStatus[username] = true;
     }
 
-    clearTimeout(typingTimeouts[username])
+    clearTimeout(typingTimeouts[username]);
 
     typingTimeouts[username] = setTimeout(() => {
         stopTyping(username);
-        typingStatus[username] = false
-    }, 2000)
+        typingStatus[username] = false;
+    }, 2000);
 }
 
 function typing(username) {
@@ -145,7 +146,6 @@ function stopTyping(username) {
     }));
 }
 
-
 function getmessagefromdb(username, offset = 0, limit = 10) {
     const data = {
         type: "get-message",
@@ -155,21 +155,19 @@ function getmessagefromdb(username, offset = 0, limit = 10) {
     };
     websocket.send(JSON.stringify(data));
 }
-//=================================scroll=============================
+
 function setupScrollListener(username) {
-    
     const chatMessages = document.getElementById(`chat-messages-${username}`);
     let offset = 10;
     chatMessages.addEventListener('scroll', function () {
-        let hasMoreMessages = chatMessages.dataset.hasMoreMessages
-        if (chatMessages.scrollTop < 10 &&   hasMoreMessages === "true") {
+        let hasMoreMessages = chatMessages.dataset.hasMoreMessages;
+        if (chatMessages.scrollTop < 10 && hasMoreMessages === "true") {
             getmessagefromdb(username, offset, 10);
             offset += 10;
             chatMessages.dataset.messageOffset = offset;
         }
     });
 }
-//========================================= websocket==================================
 
 export function createWebSockets() {
     websocket = new WebSocket(`ws://${window.location.host}/ws`);
@@ -179,43 +177,42 @@ export function createWebSockets() {
     };
 
     websocket.onmessage = function (event) {
-
         const data = JSON.parse(event.data);
         if (data.Type === "enligneusers") {
             usersenligne(data.Enligneusers);
-        }
-        else if (data.Type === "message") {
-            messagewbs(data)
+        } else if (data.Type === "message") {
+            messagewbs(data);
         } else if (data.Type === "chat-history") {
-            getOldMessages(data)
+            getOldMessages(data);
         } else if (data.Type === "typing") {
-            console.log("kteb l " , data.Receiver, data.Sender, "kikteb lih");
-            const chatmessage = document.querySelector(`#chat-messages-${data.Sender}`)
-            const points = document.querySelector(".typing")
+            console.log("kteb l ", data.Receiver, data.Sender, "kikteb lih");
+            const chatmessage = document.querySelector(`#chat-messages-${data.Sender}`);
+            const points = document.querySelector(".typing");
             if (chatmessage && points === null) {
-                const typing = document.createElement("div")
-                typing.classList.add("typing")
-                const typingdot = document.createElement("div")
-                typingdot.classList.add("typing-dot")
-                typing.appendChild(typingdot)
+                const typing = document.createElement("div");
+                typing.classList.add("typing");
+                const typingdot = document.createElement("div");
+                typingdot.classList.add("typing-dot");
+                typing.appendChild(typingdot);
 
-                const typingone = document.createElement("div")
-                typingone.classList.add("typing-dot")
-                typing.appendChild(typingone)
+                const typingone = document.createElement("div");
+                typingone.classList.add("typing-dot");
+                typing.appendChild(typingone);
 
-                const typingtwo = document.createElement("div")
-                typingtwo.classList.add("typing-dot")
-                typing.appendChild(typingtwo)
-                chatmessage.appendChild(typing)
-                chatmessage.scrollTop = chatmessage.scrollHeight
+                const typingtwo = document.createElement("div");
+                typingtwo.classList.add("typing-dot");
+                typing.appendChild(typingtwo);
+                chatmessage.appendChild(typing);
+                chatmessage.scrollTop = chatmessage.scrollHeight;
             }
-        }else if (data.Type === "stop_typing") {
-           document.querySelector(".typing").remove()
+        } else if (data.Type === "stop_typing") {
+            const typingEl = document.querySelector(".typing");
+            if (typingEl) typingEl.remove();
         }
-    }
+    };
 }
-//======================old messages==========================
-function getOldMessages(data){
+
+function getOldMessages(data) {
     const chatId = `chat-messages-${data.ChatWith}`;
     const chat = document.getElementById(chatId);
 
@@ -224,7 +221,7 @@ function getOldMessages(data){
 
         if (data.Messages && data.Messages.length > 0) {
             const fragment = document.createDocumentFragment();
-            const messagesToRender = data.Messages.reverse()
+            const messagesToRender = data.Messages.reverse();
             messagesToRender.forEach(msg => {
                 const messageDiv = document.createElement("div");
                 messageDiv.classList.add("message");
@@ -252,8 +249,8 @@ function getOldMessages(data){
         chat.dataset.hasMoreMessages = data.hasMoreMessages;
     }
 }
-//=============================msgwbs==================
-function messagewbs(data){
+
+function messagewbs(data) {
     const chatId = data.mymsg ? `chat-messages-${data.receiver}` : `chat-messages-${data.Sender}`;
     const chat = document.getElementById(chatId);
     if (chat) {
@@ -272,30 +269,24 @@ function messagewbs(data){
         messageDiv.appendChild(messageTime);
         chat.appendChild(messageDiv);
 
-        // Scroll to bottom
         chat.scrollTop = chat.scrollHeight;
-
-    }else if (data.mymsg === undefined){
-        let usersinfront = document.body.querySelectorAll(".user-item")
+    } else if (data.mymsg === undefined) {
+        let usersinfront = document.body.querySelectorAll(".user-item");
         usersinfront.forEach(user => {
             if (data.Sender === user.textContent.trim()) {
-                const userdiv = document.getElementsByClassName(user.textContent)[0]
-                userdiv.classList.add("new-message")
-            } 
+                const userdiv = document.getElementsByClassName(user.textContent)[0];
+                userdiv.classList.add("new-message");
+            }
         });
     }
 }
 
-//================= close chat =========================
 export function closechat(userId) {
     const childDiv = document.querySelector(`#chat-${userId}`);
-    childDiv.remove()
+    childDiv.remove();
 }
 
-//============================send messages=============================================
 function sendMessage(username, textarea) {
-
-
     const message = textarea.value.trim();
     if (message !== "") {
         const data = {
@@ -309,18 +300,15 @@ function sendMessage(username, textarea) {
     }
 }
 
-
 function usersenligne(enligneusers) {
-
-    let usersinfront = document.body.querySelectorAll(".user-item")
+    let usersinfront = document.body.querySelectorAll(".user-item");
     usersinfront.forEach(user => {
         if (enligneusers.includes(user.textContent)) {
-
-            const userdiv = document.getElementsByClassName(user.textContent)[0]
-            userdiv.id = "enligne"
+            const userdiv = document.getElementsByClassName(user.textContent)[0];
+            userdiv.id = "enligne";
         } else {
-            const userdiv = document.getElementsByClassName(user.textContent)[0]
-            userdiv.id = "ofligne"
+            const userdiv = document.getElementsByClassName(user.textContent)[0];
+            userdiv.id = "ofligne";
         }
     });
 }

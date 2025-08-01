@@ -33,7 +33,32 @@ func GetDB() *sql.DB {
 	return DB
 }
 
+func DropAllTables() {
+	db := GetDB()
+
+	queries := []string{
+		`PRAGMA foreign_keys = OFF;`,
+
+		`DROP TABLE IF EXISTS disliked_posts;`,
+		`DROP TABLE IF EXISTS liked_posts;`,
+		`DROP TABLE IF EXISTS comments;`,
+		`DROP TABLE IF EXISTS messages;`,
+		`DROP TABLE IF EXISTS posts;`,
+		`DROP TABLE IF EXISTS sessions;`,
+		`DROP TABLE IF EXISTS users;`,
+
+		`PRAGMA foreign_keys = ON;`,
+	}
+
+	for _, q := range queries {
+		if _, err := db.Exec(q); err != nil {
+			log.Fatalf("Failed to drop tables: %v\nQuery: %s", err, q)
+		}
+	}
+}
+
 func InitSchema() {
+    
 	db := GetDB()
 
 	queries := []string{

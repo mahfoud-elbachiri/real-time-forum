@@ -2,11 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"real-time-forum/database"
 )
 
 func LikePost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("wslaat")
 	if r.Method != http.MethodPost {
 		jsonResponse(w, http.StatusMethodNotAllowed, "Method not allowed", nil)
 		return

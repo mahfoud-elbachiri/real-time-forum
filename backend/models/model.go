@@ -32,13 +32,18 @@ type Session struct {
 }
 
 type Post struct {
-	ID        int       `json:"id"`
-	UserID    string    `json:"user_id"`
-	Title     string    `json:"title"`
-	Content   string    `json:"content"`
-	Category  string    `json:"category"`
-	CreatedAt time.Time `json:"created_at"`
-	Author    string    `json:"author"`
+	ID            int    `json:"id"`
+	UserID        int    `json:"user_id"`
+	Title         string `json:"title"`
+	Content       string `json:"content"`
+	Category      string `json:"category"`
+	CreatedAt     string `json:"created_at"`
+	Author        string `json:"author"`
+
+	LikesCount    int  `json:"likes_count"`
+	DislikesCount int  `json:"dislikes_count"`
+	UserLiked     bool `json:"user_liked"`
+	UserDisliked  bool `json:"user_disliked"`
 }
 
 type Comment struct {

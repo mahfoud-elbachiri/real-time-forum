@@ -18,5 +18,7 @@ func WebRoutes() {
 	http.HandleFunc("/api/users", handlers.GetUsers)
 	http.HandleFunc("/api/createcomment", handlers.CreateComment)
 	http.HandleFunc("/api/comments", handlers.FetchComments)
+		http.HandleFunc("/api/like", handlers.LikePost)
+	http.HandleFunc("/api/dislike", handlers.DislikePost)
 
 }
