@@ -4,15 +4,20 @@ import { checkSession } from '/frontend/js/auth.js';
 import { fetchComments, createComment } from '/frontend/js/comments.js';
 import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 
-export async function fetchPosts() {
-    let islogg = checkSession();
-    console.log("in fetch :", islogg.value);
+
+const state = {
+    filter: "all",
+    category: null,
+};
+
+export async function fetchPosts(filter = "all", category = null) {
+    let url = buildPostsURL(filter, category);
 
     const divpost = document.querySelector(".post-feed");
     divpost.innerHTML = "<p>Loading posts...</p>";
 
     try {
-        const response = await fetch("/api/fetchposts", {
+        const response = await fetch(url, {
             headers: { "Content-Type": "application/json" },
         });
         if (!response.ok) {
@@ -197,5 +202,46 @@ export async function submitPost(event) {
     }
 }
 
-// Make createPost available globally for onclick
+ 
+
+
+function toggleState(key, value, resetValue) {
+    state[key] = state[key] === value ? resetValue : value;
+    fetchPosts(state.filter, state.category);
+    updateActiveButtons();
+}
+
+function filterPosts(type) {
+    toggleState("filter", type, "all");
+}
+
+function filterCategory(category) {
+    toggleState("category", category, null);
+}
+
+
+ function buildPostsURL(filter, category) {
+    const params = new URLSearchParams();
+
+    if (filter && filter !== "all") params.set("filter", filter);
+    if (category) params.set("category", category);
+
+    return `/api/fetchposts?${params.toString()}`;
+}
+
+
+function updateActiveButtons() {
+    document.querySelectorAll("[data-filter]").forEach(btn => {
+        btn.classList.toggle("filter-active", btn.dataset.filter === state.filter);
+    });
+
+    document.querySelectorAll("[data-category]").forEach(btn => {
+        btn.classList.toggle("filter-active", btn.dataset.category === state.category);
+    });
+}
+
+
+window.filterPosts = filterPosts;
+window.filterByCategory = filterCategory;
+
 window.createPost = createPost;

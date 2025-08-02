@@ -7,7 +7,7 @@ import { openChatPopup, afficher_users, closechat, createWebSockets } from '/fro
 const publicRoutes = ["/login", "/register"];
 let nchat = 0;
 
- 
+
 function showApp() {
     const app = document.getElementById('app');
     const spinner = document.getElementById('loading-spinner');
@@ -106,17 +106,17 @@ export async function navigateTo(page) {
                     <h2>Forum Menu</h2>
                     <ul>
                         <li><button onclick="createPost()">➕ Create Post</button></li>
-                        <li><button onclick="filterPosts('all')">📌 All Posts</button></li>
-                        <li><button onclick="filterPosts('my')">📝 My Posts</button></li>
-                        <li><button onclick="filterPosts('liked')">❤️ Liked Posts</button></li>
+                        <li><button data-filter="all" onclick="filterPosts('all')">📌 All Posts</button></li>
+                        <li><button data-filter="my" onclick="filterPosts('my')">📝 My Posts</button></li>
+                        <li><button data-filter="liked" onclick="filterPosts('liked')">❤️ Liked Posts</button></li>
                         <li><button class="logout-btn">🚪 Logout</button></li>
                     </ul>
 
                     <h3>Categories</h3>
                     <ul id="category-list">
-                        <li><button onclick="filterPosts('tech')">💻 Tech</button></li>
-                        <li><button onclick="filterPosts('gaming')">🎮 Gaming</button></li>
-                        <li><button onclick="filterPosts('sports')">⚽ Sports</button></li>
+                        <li><button data-category="tech" onclick="filterByCategory('tech')">💻 Tech</button></li>
+                        <li><button data-category="gaming" onclick="filterByCategory('gaming')">🎮 Gaming</button></li>
+                        <li><button data-category="sports" onclick="filterByCategory('sports')">⚽ Sports</button></li>
                     </ul>
                 </aside>
 
