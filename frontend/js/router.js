@@ -7,6 +7,14 @@ import { openChatPopup, afficher_users, closechat, createWebSockets } from '/fro
 const publicRoutes = ["/login", "/register"];
 let nchat = 0;
 
+ 
+function showApp() {
+    const app = document.getElementById('app');
+    const spinner = document.getElementById('loading-spinner');
+    if (app) app.classList.add('loaded');
+    if (spinner) spinner.classList.add('hidden');
+}
+
 // Add event listeners
 function addListeners() {
     document.body.addEventListener("click", function (event) {
@@ -164,6 +172,9 @@ export async function navigateTo(page) {
     } else {
         history.replaceState({ page: page }, "", page);
     }
+
+    // Show content after everything is ready
+    showApp();
 }
 
 const routes = {

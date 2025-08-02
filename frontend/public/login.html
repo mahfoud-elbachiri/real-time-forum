@@ -5,35 +5,68 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Forum SPA</title>
-  <link rel="icon"  href="/favicon.ico">
+  <link rel="icon" href="/favicon.ico">
   <link id="page-style" rel="stylesheet" href="/frontend/css/login.css" />
+  <style>
+  
+    #app {
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
+    }
+
+    #app.loaded {
+      opacity: 1;
+    }
+
+    
+    .loading-spinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-spinner.hidden {
+      display: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+  </style>
 
   <!-- <script type="module" src="/frontend/js/ws.js"></script> -->
 
   <script type="module" src="/frontend/js/router.js"></script>
 
 </head>
+
 <body>
-  
-      <div id="app">
-      <div class="container">
-        <h2>Login</h2>
-        <input type="text" id="user" placeholder="Username or Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button class="login-btn">Login</button>
-        <button class="register-btn">register</button>
-      </div>
-    </div>
 
-<div id="popup"></div>
+  <div id="app"></div>
+  <div id="loading-spinner" class="loading-spinner"></div>
 
-<div id="notification" class="hidden"></div>
+  <div id="popup"></div>
 
-<script>
-    window.createPost = function() {};
-    window.filterPosts = function() {};
-    window.sendMessage = function() {};
-</script>
+  <div id="notification" class="hidden"></div>
+
+  <script>
+    window.createPost = function () { };
+    window.filterPosts = function () { };
+    window.sendMessage = function () { };
+  </script>
 </body>
 
 </html>

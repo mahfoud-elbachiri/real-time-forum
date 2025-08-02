@@ -5,7 +5,7 @@ import (
 	"log"
 	"sync"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 func GetDB() *sql.DB {
 	once.Do(func() {
 		var err error
-		DB, err = sql.Open("sqlite3", "./mydatabase.db")
+		DB, err = sql.Open("sqlite", "file:mydatabase.db?_pragma=foreign_keys(1)")
 		if err != nil {
 			log.Fatal(err)
 		}
