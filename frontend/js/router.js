@@ -106,9 +106,6 @@ export async function navigateTo(page) {
                     <h2>Forum Menu</h2>
                     <ul>
                         <li><button onclick="createPost()">➕ Create Post</button></li>
-                        <li><button data-filter="all" onclick="filterPosts('all')">📌 All Posts</button></li>
-                        <li><button data-filter="my" onclick="filterPosts('my')">📝 My Posts</button></li>
-                        <li><button data-filter="liked" onclick="filterPosts('liked')">❤️ Liked Posts</button></li>
                         <li><button class="logout-btn">🚪 Logout</button></li>
                     </ul>
 
@@ -122,7 +119,23 @@ export async function navigateTo(page) {
 
                 <!-- Main Content -->
                 <main class="content">
-                    <h2>Forum Posts</h2>
+                    <div class="content-header">
+                        <h2>Forum Posts</h2>
+                        <div class="sort-dropdown">
+                            <button class="sort-dropdown-btn" onclick="toggleSortDropdown()">
+                                <span id="current-sort-icon">🕐</span>
+                                <span id="current-sort-label">Latest</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="sort-dropdown-menu" id="sort-dropdown-menu">
+                                <div class="sort-dropdown-header">Sort by</div>
+                                <button data-sort="latest" onclick="setSort('latest')">🕐 Latest</button>
+                                <button data-sort="hot" onclick="setSort('hot')">🔥 Hot</button>
+                                <button data-sort="my" onclick="setSort('my')">📝 My Posts</button>
+                                <button data-sort="rising" onclick="setSort('rising')">📈 Rising</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="post-feed">Loading posts...</div>
                 </main>
 

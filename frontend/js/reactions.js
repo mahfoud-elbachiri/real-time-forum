@@ -13,29 +13,28 @@ export async function handleLike(postElement, postId) {
             throw new Error("Failed to like post");
         }
 
-        const likeBtn = postElement.querySelector(".like-btn");
-        const dislikeBtn = postElement.querySelector(".dislike-btn");
-        const likeCount = likeBtn.querySelector(".like-count");
-        const dislikeCount = dislikeBtn.querySelector(".dislike-count");
+        const upvoteBtn = postElement.querySelector(".upvote");
+        const downvoteBtn = postElement.querySelector(".downvote");
+        const voteCount = postElement.querySelector(".vote-count");
 
-        const isLiked = likeBtn.dataset.liked === "true";
+        const isLiked = upvoteBtn.classList.contains("active");
 
         if (isLiked) {
             // Unlike
-            likeBtn.classList.remove("active");
-            likeBtn.dataset.liked = "false";
-            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+            upvoteBtn.classList.remove("active");
+            voteCount.classList.remove("upvoted");
+            voteCount.textContent = parseInt(voteCount.textContent) - 1;
         } else {
             // Like
-            likeBtn.classList.add("active");
-            likeBtn.dataset.liked = "true";
-            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            upvoteBtn.classList.add("active");
+            voteCount.classList.add("upvoted");
+            voteCount.classList.remove("downvoted");
+            voteCount.textContent = parseInt(voteCount.textContent) + 1;
 
             // Remove dislike if exists
-            if (dislikeBtn.dataset.disliked === "true") {
-                dislikeBtn.classList.remove("active");
-                dislikeBtn.dataset.disliked = "false";
-                dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+            if (downvoteBtn.classList.contains("active")) {
+                downvoteBtn.classList.remove("active");
+                voteCount.textContent = parseInt(voteCount.textContent) + 1;
             }
         }
     } catch (error) {
@@ -56,29 +55,28 @@ export async function handleDislike(postElement, postId) {
             throw new Error("Failed to dislike post");
         }
 
-        const likeBtn = postElement.querySelector(".like-btn");
-        const dislikeBtn = postElement.querySelector(".dislike-btn");
-        const likeCount = likeBtn.querySelector(".like-count");
-        const dislikeCount = dislikeBtn.querySelector(".dislike-count");
+        const upvoteBtn = postElement.querySelector(".upvote");
+        const downvoteBtn = postElement.querySelector(".downvote");
+        const voteCount = postElement.querySelector(".vote-count");
 
-        const isDisliked = dislikeBtn.dataset.disliked === "true";
+        const isDisliked = downvoteBtn.classList.contains("active");
 
         if (isDisliked) {
-           
-            dislikeBtn.classList.remove("active");
-            dislikeBtn.dataset.disliked = "false";
-            dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+            // Remove dislike
+            downvoteBtn.classList.remove("active");
+            voteCount.classList.remove("downvoted");
+            voteCount.textContent = parseInt(voteCount.textContent) + 1;
         } else {
-           
-            dislikeBtn.classList.add("active");
-            dislikeBtn.dataset.disliked = "true";
-            dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
+            // Dislike
+            downvoteBtn.classList.add("active");
+            voteCount.classList.add("downvoted");
+            voteCount.classList.remove("upvoted");
+            voteCount.textContent = parseInt(voteCount.textContent) - 1;
 
-           
-            if (likeBtn.dataset.liked === "true") {
-                likeBtn.classList.remove("active");
-                likeBtn.dataset.liked = "false";
-                likeCount.textContent = parseInt(likeCount.textContent) - 1;
+            // Remove like if exists
+            if (upvoteBtn.classList.contains("active")) {
+                upvoteBtn.classList.remove("active");
+                voteCount.textContent = parseInt(voteCount.textContent) - 1;
             }
         }
     } catch (error) {

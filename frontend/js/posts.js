@@ -1,5 +1,5 @@
 // Posts module
-import { showpopup } from '/frontend/js/utils.js';
+import { showpopup, timeAgo } from '/frontend/js/utils.js';
 import { checkSession } from '/frontend/js/auth.js';
 import { fetchComments, createComment } from '/frontend/js/comments.js';
 import { handleLike, handleDislike } from '/frontend/js/reactions.js';
@@ -8,6 +8,7 @@ import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 const state = {
     filter: "all",
     category: null,
+    sort: null, // "hot" for most liked
 };
 
 export async function fetchPosts(filter = "all", category = null) {
@@ -24,51 +25,62 @@ export async function fetchPosts(filter = "all", category = null) {
             throw new Error("Failed to fetch posts");
         }
 
-        const data = await response.json();
+        let data = await response.json();
         if (data === null) {
             divpost.innerHTML = "<p>No posts found. Be the first to create a post!</p>";
             return;
         }
 
+
+        if (state.sort === "hot") {
+            data = data.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0));
+        }
+
         divpost.innerHTML = "";
 
         data.forEach((post) => {
-            const postDate = new Date(post.created_at);
-            const formattedDate = postDate.toLocaleString();
+            const formattedDate = timeAgo(post.created_at);
 
             const postElement = document.createElement("div");
             postElement.className = "post-item";
             postElement.dataset.postId = post.id;
 
             postElement.innerHTML = `
-                <div class="post-header">
-                    <h2>${post.title}</h2>
+                <div class="vote-section">
+                    <button class="vote-btn upvote ${post.user_liked ? 'active' : ''}" data-post-id="${post.id}">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19V5M5 12l7-7 7 7"/>
+                        </svg>
+                    </button>
+                    <span class="vote-count ${post.user_liked ? 'upvoted' : ''} ${post.user_disliked ? 'downvoted' : ''}">${(post.likes_count || 0) - (post.dislikes_count || 0)}</span>
+                    <button class="vote-btn downvote ${post.user_disliked ? 'active' : ''}" data-post-id="${post.id}">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12l7 7 7-7"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="post-body">
+                    <div class="post-header">
+                        <h2 class="post-title">${post.title}</h2>
+                        <span class="category-tag">${post.category}</span>
+                    </div>
+                    <div class="post-content">
+                        <pre>${post.content}</pre>
+                    </div>
                     <div class="post-meta">
-                        <span class="post-author">Posted by: ${post.author}</span>
-                        <span class="post-date">Date: ${formattedDate}</span>
-                        <span class="post-category">Category: ${post.category}</span>
+                        <span class="post-author">Posted by <strong>u/${post.author}</strong></span>
+                        <span class="post-date">${formattedDate}</span>
+                        <button class="comment-toggle" data-post-id="${post.id}">💬 Comments</button>
                     </div>
-                </div>
-                <div class="post-content">
-                    <pre>${post.content}</pre>
-                </div>
-                <div class="post-actions">
-                    <button class="comment-toggle" data-post-id="${post.id}">💬 Comments</button>
-                    <button class="like-btn ${post.user_liked ? 'active' : ''}" data-post-id="${post.id}" data-liked="${post.user_liked}">
-                        👍 <span class="like-count">${post.likes_count || 0}</span>
-                    </button>
-                    <button class="dislike-btn ${post.user_disliked ? 'active' : ''}" data-post-id="${post.id}" data-disliked="${post.user_disliked}">
-                        👎 <span class="dislike-count">${post.dislikes_count || 0}</span>
-                    </button>
-                </div>
-                <div class="comments-section" id="comments-${post.id}" style="display: none;">
-                    <h3>Comments</h3>
-                    <div class="comments-list" id="comments-list-${post.id}">
-                        <p>Loading comments...</p>
-                    </div>
-                    <div class="add-comment">
-                        <textarea class="comment" placeholder="Add your comment" id="comment-input-${post.id}"></textarea>
-                        <button class="comment-submit" id="${post.id}">Submit</button>
+                    <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                        <h3>Comments</h3>
+                        <div class="comments-list" id="comments-list-${post.id}">
+                            <p>Loading comments...</p>
+                        </div>
+                        <div class="add-comment">
+                            <textarea class="comment" placeholder="Add your comment" id="comment-input-${post.id}"></textarea>
+                            <button class="comment-submit" id="${post.id}">Submit</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -94,14 +106,14 @@ export async function fetchPosts(filter = "all", category = null) {
             });
 
             // Like button listener
-            const likeBtn = postElement.querySelector(".like-btn");
-            likeBtn.addEventListener("click", () => {
+            const upvoteBtn = postElement.querySelector(".upvote");
+            upvoteBtn.addEventListener("click", () => {
                 handleLike(postElement, post.id);
             });
 
             // Dislike button listener
-            const dislikeBtn = postElement.querySelector(".dislike-btn");
-            dislikeBtn.addEventListener("click", () => {
+            const downvoteBtn = postElement.querySelector(".downvote");
+            downvoteBtn.addEventListener("click", () => {
                 handleDislike(postElement, post.id);
             });
         });
@@ -202,25 +214,67 @@ export async function submitPost(event) {
     }
 }
 
- 
-
-
 function toggleState(key, value, resetValue) {
     state[key] = state[key] === value ? resetValue : value;
     fetchPosts(state.filter, state.category);
     updateActiveButtons();
 }
 
-function filterPosts(type) {
-    toggleState("filter", type, "all");
-}
-
 function filterCategory(category) {
     toggleState("category", category, null);
 }
 
+// Dropdown toggle
+function toggleSortDropdown() {
+    const menu = document.getElementById('sort-dropdown-menu');
+    menu.classList.toggle('show');
+}
 
- function buildPostsURL(filter, category) {
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const dropdown = document.querySelector('.sort-dropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+        const menu = document.getElementById('sort-dropdown-menu');
+        if (menu) menu.classList.remove('show');
+    }
+});
+
+// Sort options mapping
+const sortOptions = {
+    latest: { icon: '🕐', label: 'Latest', filter: 'all', sort: null },
+    hot: { icon: '🔥', label: 'Hot', filter: 'all', sort: 'hot' },
+    my: { icon: '📝', label: 'My Posts', filter: 'my', sort: null },
+    rising: { icon: '📈', label: 'Rising', filter: 'liked', sort: null }
+};
+
+function setSort(sortKey) {
+    const option = sortOptions[sortKey];
+    if (!option) return;
+
+    state.filter = option.filter;
+    state.sort = option.sort;
+    state.currentSortKey = sortKey;
+
+    // Update dropdown button display
+    const iconSpan = document.getElementById('current-sort-icon');
+    const labelSpan = document.getElementById('current-sort-label');
+    if (iconSpan) iconSpan.textContent = option.icon;
+    if (labelSpan) labelSpan.textContent = option.label;
+
+    // Close dropdown
+    const menu = document.getElementById('sort-dropdown-menu');
+    if (menu) menu.classList.remove('show');
+
+    // Update active state in dropdown
+    document.querySelectorAll('.sort-dropdown-menu button[data-sort]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === sortKey);
+    });
+
+    fetchPosts(state.filter, state.category);
+    updateActiveButtons();
+}
+
+function buildPostsURL(filter, category) {
     const params = new URLSearchParams();
 
     if (filter && filter !== "all") params.set("filter", filter);
@@ -229,19 +283,16 @@ function filterCategory(category) {
     return `/api/fetchposts?${params.toString()}`;
 }
 
-
 function updateActiveButtons() {
-    document.querySelectorAll("[data-filter]").forEach(btn => {
-        btn.classList.toggle("filter-active", btn.dataset.filter === state.filter);
-    });
-
     document.querySelectorAll("[data-category]").forEach(btn => {
         btn.classList.toggle("filter-active", btn.dataset.category === state.category);
     });
 }
 
-
-window.filterPosts = filterPosts;
+window.filterPosts = setSort;
 window.filterByCategory = filterCategory;
+window.sortPosts = setSort;
+window.toggleSortDropdown = toggleSortDropdown;
+window.setSort = setSort;
 
 window.createPost = createPost;
