@@ -19,7 +19,8 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    width: 450px;
+    max-width: 90vw;
     text-align: center;
 }
 
@@ -39,7 +40,8 @@ label {
     margin-bottom: 5px;
 }
 
-input, select {
+input:not([type="radio"]):not([type="checkbox"]),
+select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -78,7 +80,7 @@ a {
 }
 
 
-.popup{
+.popup {
     display: none;
     position: fixed;
     bottom: 20px;
@@ -91,6 +93,72 @@ a {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: opacity 0.5s ease-in-out;
 }
+
 .popup.success {
     background-color: #28a745;
+}
+
+/* Avatar Selection */
+.avatar-selection {
+    text-align: left;
+    margin: 10px 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.avatar-category {
+    margin-bottom: 15px;
+}
+
+.avatar-category span {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.avatars-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.avatar-option {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.avatar-option input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+.avatar-option img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    object-fit: cover;
+    transform: scale(1.2) translateY(8px);
+}
+
+.avatar-option input:checked+img {
+    border-color: #007bff;
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.avatar-option:hover img {
+    border-color: #ddd;
 }

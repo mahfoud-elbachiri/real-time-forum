@@ -16,6 +16,7 @@ export async function Register() {
         gender: document.getElementById("gender").value,
         email: document.getElementById("email").value,
         password: document.getElementById("password").value,
+        avatar_url: document.querySelector('input[name="avatar"]:checked')?.value || "",
     };
 
     const fields = {

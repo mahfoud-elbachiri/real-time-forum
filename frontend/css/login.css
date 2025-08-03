@@ -5,92 +5,158 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: #f4f4f4;
-  }
-  .error-message {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: 5px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background: #f4f4f4;
 }
 
-  /* Container styling */
-  .container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
-  }
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
 
-  
-  /* Input fields */
-  input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  /* Buttons */
-  button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button[type="login"] {
-    background: #007bff;
-    color: white;
-  }
-  
-  button[type="login"]:hover {
-    background: #0056b3;
-  }
-  
-  .register-btn {
-    background: #28a745;
-    color: white;
-  }
-  
-  .register-btn:hover {
-    background: #1e7e34;
-  }
-  
-  
-  .error-message {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: 5px;
+/* Container styling */
+.container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 450px;
+  max-width: 90vw;
+}
+
+
+/* Input fields */
+input:not([type="radio"]):not([type="checkbox"]) {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="login"] {
+  background: #007bff;
+  color: white;
+}
+
+button[type="login"]:hover {
+  background: #0056b3;
+}
+
+.register-btn {
+  background: #28a745;
+  color: white;
+}
+
+.register-btn:hover {
+  background: #1e7e34;
+}
+
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
 }
 
 
 #popup {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ff4d4d;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.5s ease-in-out;
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.5s ease-in-out;
 }
+
 #popup.success {
-    background-color: #28a745;
+  background-color: #28a745;
+}
+
+/* Avatar Selection */
+.avatar-selection {
+  text-align: left;
+  margin: 10px 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.avatar-category {
+  margin-bottom: 15px;
+}
+
+.avatar-category span {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.avatars-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.avatar-option {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.avatar-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.avatar-option img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.avatar-option input:checked+img {
+  border-color: #007bff;
+  transform: scale(1.1);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.avatar-option:hover img {
+  border-color: #ddd;
 }

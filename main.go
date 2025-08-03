@@ -14,9 +14,9 @@ func main() {
 	Servingfiles()
 	dataBase.InitSchema()
 	routes.WebRoutes()
-	fmt.Println("Starting server on :8061")
+	fmt.Println("Starting server on :8063")
 	// exec.Command("xdg-open", "http://localhost:8005/").Start()
-	err := http.ListenAndServe(":8061", nil)
+	err := http.ListenAndServe(":8063", nil)
 	if err != nil {
 		fmt.Println("err starting the server : ", err)
 		return

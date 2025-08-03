@@ -48,8 +48,8 @@ func FetchPosts(w http.ResponseWriter, r *http.Request) {
 			)
 		`)
 		args = append(args, userID)
-		case "all":
-			 
+	case "all":
+
 	}
 
 	if category != "" {
@@ -65,7 +65,7 @@ func FetchPosts(w http.ResponseWriter, r *http.Request) {
 	baseQuery := `
 	SELECT
 		p.id, p.user_id, p.title, p.content, p.category, p.created_at,
-		u.nickname,
+		u.nickname, u.avatar_url,
 
 		(SELECT COUNT(*) FROM liked_posts WHERE post_id = p.id),
 		(SELECT COUNT(*) FROM disliked_posts WHERE post_id = p.id),
@@ -103,6 +103,7 @@ func FetchPosts(w http.ResponseWriter, r *http.Request) {
 			&post.Category,
 			&post.CreatedAt,
 			&post.Author,
+			&post.AuthorAvatar,
 			&post.LikesCount,
 			&post.DislikesCount,
 			&post.UserLiked,

@@ -21,7 +21,6 @@ func GetDB() *sql.DB {
 			log.Fatal(err)
 		}
 
-		
 		if _, err = DB.Exec(`PRAGMA foreign_keys = ON;`); err != nil {
 			log.Fatal(err)
 		}
@@ -58,7 +57,7 @@ func DropAllTables() {
 }
 
 func InitSchema() {
-    
+
 	db := GetDB()
 
 	queries := []string{
@@ -72,7 +71,8 @@ func InitSchema() {
 			first_name TEXT NOT NULL,
 			last_name TEXT NOT NULL,
 			age INTEGER NOT NULL,
-			gender TEXT NOT NULL
+			gender TEXT NOT NULL,
+			avatar_url TEXT DEFAULT ''
 		);`,
 
 		// SESSIONS
@@ -146,6 +146,9 @@ func InitSchema() {
 			log.Fatalf("Schema error: %v\nQuery:\n%s", err, q)
 		}
 	}
+
+	// Migration for avatar_url
+	_, _ = db.Exec("ALTER TABLE users ADD COLUMN avatar_url TEXT DEFAULT ''")
 
 	createIndexes(db)
 }

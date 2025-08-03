@@ -48,7 +48,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		jsonResponse(w, http.StatusBadRequest, "Username or Email already exists", nil)
 		return
 	}
-	res, err := database.DB.Exec("INSERT INTO users (nickname,email,password,first_name,last_name,age,gender) VALUES(?,?,?,?,?,?,?)", user.Nickname, user.Email, string(hashedPassword), user.FirstName, user.LastName, user.Age, user.Gender, user.CreatedAt, user.LastSeen)
+	res, err := database.DB.Exec("INSERT INTO users (nickname,email,password,first_name,last_name,age,gender,avatar_url) VALUES(?,?,?,?,?,?,?,?)", user.Nickname, user.Email, string(hashedPassword), user.FirstName, user.LastName, user.Age, user.Gender, user.AvatarURL)
 	if err != nil {
 		fmt.Println("error in insert : ", err)
 		jsonResponse(w, http.StatusInternalServerError, "some input are not allowed", nil)

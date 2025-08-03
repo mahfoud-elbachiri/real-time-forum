@@ -16,6 +16,7 @@ type User struct {
 	LastName  string    `json:"last_name"`
 	Age       int       `json:"age"`
 	Gender    string    `json:"gender"`
+	AvatarURL string    `json:"avatar_url"`
 	CreatedAt time.Time `json:"created_at"`
 	LastSeen  time.Time `json:"last_seen"`
 }
@@ -32,13 +33,14 @@ type Session struct {
 }
 
 type Post struct {
-	ID            int    `json:"id"`
-	UserID        int    `json:"user_id"`
-	Title         string `json:"title"`
-	Content       string `json:"content"`
-	Category      string `json:"category"`
-	CreatedAt     string `json:"created_at"`
-	Author        string `json:"author"`
+	ID           int    `json:"id"`
+	UserID       int    `json:"user_id"`
+	Title        string `json:"title"`
+	Content      string `json:"content"`
+	Category     string `json:"category"`
+	CreatedAt    string `json:"created_at"`
+	Author       string `json:"author"`
+	AuthorAvatar string `json:"author_avatar"`
 
 	LikesCount    int  `json:"likes_count"`
 	DislikesCount int  `json:"dislikes_count"`
@@ -52,7 +54,7 @@ type Comment struct {
 	UserID    string    `json:"user_id"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
-	Author    string    `json:"author"` 
+	Author    string    `json:"author"`
 }
 
 type Message struct {
@@ -75,6 +77,6 @@ type LikedPost struct {
 }
 
 type Nickname struct {
-	Username string `json:"nickname"`
-	Unreadcount int `json:"unread_count"`
+	Username    string `json:"nickname"`
+	Unreadcount int    `json:"unread_count"`
 }

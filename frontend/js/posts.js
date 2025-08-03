@@ -48,30 +48,48 @@ export async function fetchPosts(filter = "all", category = null) {
             postElement.innerHTML = `
                 <div class="vote-section">
                     <button class="vote-btn upvote ${post.user_liked ? 'active' : ''}" data-post-id="${post.id}">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="4">
                             <path d="M12 19V5M5 12l7-7 7 7"/>
                         </svg>
                     </button>
                     <span class="vote-count ${post.user_liked ? 'upvoted' : ''} ${post.user_disliked ? 'downvoted' : ''}">${(post.likes_count || 0) - (post.dislikes_count || 0)}</span>
                     <button class="vote-btn downvote ${post.user_disliked ? 'active' : ''}" data-post-id="${post.id}">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="4">
                             <path d="M12 5v14M5 12l7 7 7-7"/>
                         </svg>
                     </button>
                 </div>
-                <div class="post-body">
-                    <div class="post-header">
-                        <h2 class="post-title">${post.title}</h2>
-                        <span class="category-tag">${post.category}</span>
+
+                <div class="avatar-section">
+                    <div class="post-avatar-container">
+                        <img src="${post.author_avatar || '/frontend/public/avatars/mens/_Human Avatar Image-1.png'}" class="post-avatar" alt="${post.author}'s avatar">
                     </div>
-                    <div class="post-content">
+                </div>
+
+                <div class="post-main-content">
+                    <div class="post-header-info">
+                        <h2 class="post-title">${post.title}</h2>
+                        <div class="post-meta-line">
+                            <span class="post-author">Posted by <strong>${post.author}</strong></span>
+                            <span class="post-separator">•</span>
+                            <span class="post-date">${formattedDate}</span>
+                            <span class="category-tag">${post.category}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="post-content-text">
                         <pre>${post.content}</pre>
                     </div>
-                    <div class="post-meta">
-                        <span class="post-author">Posted by <strong>u/${post.author}</strong></span>
-                        <span class="post-date">${formattedDate}</span>
-                        <button class="comment-toggle" data-post-id="${post.id}">💬 Comments</button>
+
+                    <div class="post-footer-actions">
+                         <button class="comment-toggle" data-post-id="${post.id}">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Comments
+                         </button>
                     </div>
+                    
                     <div class="comments-section" id="comments-${post.id}" style="display: none;">
                         <h3>Comments</h3>
                         <div class="comments-list" id="comments-list-${post.id}">
@@ -99,19 +117,18 @@ export async function fetchPosts(filter = "all", category = null) {
                 }
             });
 
-            // Comment submit listener
+           
             const commentSubmit = postElement.querySelector(".comment-submit");
             commentSubmit.addEventListener("click", () => {
                 createComment(post.id);
             });
 
-            // Like button listener
+            
             const upvoteBtn = postElement.querySelector(".upvote");
             upvoteBtn.addEventListener("click", () => {
                 handleLike(postElement, post.id);
             });
 
-            // Dislike button listener
             const downvoteBtn = postElement.querySelector(".downvote");
             downvoteBtn.addEventListener("click", () => {
                 handleDislike(postElement, post.id);
@@ -224,13 +241,13 @@ function filterCategory(category) {
     toggleState("category", category, null);
 }
 
-// Dropdown toggle
+ 
 function toggleSortDropdown() {
     const menu = document.getElementById('sort-dropdown-menu');
     menu.classList.toggle('show');
 }
 
-// Close dropdown when clicking outside
+ 
 document.addEventListener('click', (e) => {
     const dropdown = document.querySelector('.sort-dropdown');
     if (dropdown && !dropdown.contains(e.target)) {
@@ -239,12 +256,32 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Sort options mapping
+ 
 const sortOptions = {
-    latest: { icon: '🕐', label: 'Latest', filter: 'all', sort: null },
-    hot: { icon: '🔥', label: 'Hot', filter: 'all', sort: 'hot' },
-    my: { icon: '📝', label: 'My Posts', filter: 'my', sort: null },
-    rising: { icon: '📈', label: 'Rising', filter: 'liked', sort: null }
+    latest: {
+        icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+        label: 'Latest',
+        filter: 'all',
+        sort: null
+    },
+    hot: {
+        icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>',
+        label: 'Hot',
+        filter: 'all',
+        sort: 'hot'
+    },
+    my: {
+        icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+        label: 'My Posts',
+        filter: 'my',
+        sort: null
+    },
+    rising: {
+        icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
+        label: 'Rising',
+        filter: 'liked',
+        sort: null
+    }
 };
 
 function setSort(sortKey) {
@@ -255,17 +292,17 @@ function setSort(sortKey) {
     state.sort = option.sort;
     state.currentSortKey = sortKey;
 
-    // Update dropdown button display
+ 
     const iconSpan = document.getElementById('current-sort-icon');
     const labelSpan = document.getElementById('current-sort-label');
-    if (iconSpan) iconSpan.textContent = option.icon;
+    if (iconSpan) iconSpan.innerHTML = option.icon;
     if (labelSpan) labelSpan.textContent = option.label;
 
-    // Close dropdown
+    // close dropdown
     const menu = document.getElementById('sort-dropdown-menu');
     if (menu) menu.classList.remove('show');
 
-    // Update active state in dropdown
+    // update active state in dropdown
     document.querySelectorAll('.sort-dropdown-menu button[data-sort]').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.sort === sortKey);
     });
