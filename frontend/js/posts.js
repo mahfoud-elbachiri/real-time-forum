@@ -27,7 +27,7 @@ export async function fetchPosts(filter = "all", category = null) {
 
         let data = await response.json();
         if (data === null) {
-            divpost.innerHTML = "<p>No posts found. Be the first to create a post!</p>";
+            divpost.innerHTML = "<p>No posts found. create First post!</p>";
             return;
         }
 

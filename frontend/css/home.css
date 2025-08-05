@@ -81,37 +81,36 @@ body {
   transform: translateX(2px);
 }
 
-/* Active filter button state */
+ 
 .sidebar button.filter-active {
   background: #1a1a1b;
-  /* Darker for active, overrides gradient */
+ 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: none;
 }
 
 /* Main Content */
 .content {
-  background: rgb(255, 255, 255);
+ 
   padding: 20px;
   border-radius: 10px;
 
 }
 
-/* Content header with title and dropdown */
-.content-header {
+ .content-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #000000;
 }
 
 .content-header h2 {
   margin: 0;
 }
 
-/* Reddit-style Sort Dropdown */
+ 
 .sort-dropdown {
   position: relative;
 }
