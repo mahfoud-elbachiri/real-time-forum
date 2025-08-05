@@ -1,6 +1,6 @@
 // Posts module
 import { showpopup, timeAgo } from '/frontend/js/utils.js';
-import { checkSession } from '/frontend/js/auth.js';
+    import { checkSession } from '/frontend/js/auth.js';
 import { fetchComments, createComment } from '/frontend/js/comments.js';
 import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 

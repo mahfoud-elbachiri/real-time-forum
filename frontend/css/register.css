@@ -7,7 +7,10 @@
 }
 
 body {
-    background-color: #f4f4f4;
+    background-image: url('/frontend/public/background.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +54,7 @@ select {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+  background: linear-gradient(135deg, #5d3fd3 0%, #9b6cff 100%);
     color: white;
     border: none;
     border-radius: 5px;
@@ -102,7 +105,8 @@ a {
 .avatar-selection {
     text-align: left;
     margin: 10px 0;
-    max-height: 300px;
+    max-height: 180px;
+ 
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
@@ -143,14 +147,15 @@ a {
 }
 
 .avatar-option img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+ 
+    height: 60px;
     border-radius: 50%;
     border: 3px solid transparent;
     transition: all 0.2s ease;
     cursor: pointer;
     object-fit: cover;
-    transform: scale(1.2) translateY(8px);
+  
 }
 
 .avatar-option input:checked+img {

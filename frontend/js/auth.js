@@ -19,9 +19,14 @@ export async function Register() {
         avatar_url: document.querySelector('input[name="avatar"]:checked')?.value || "",
     };
 
+    if (!obj.avatar_url) {
+        showError("avatar-selection", "Please choose an avatar");
+        return;
+    }
+
     const fields = {
         nickname: { value: obj.nickname, message: "Nickname is required." },
-        age: { value: obj.age, condition: obj.age <= 7 || isNaN(obj.age), message: "Please enter a valid age." },
+        age: { value: obj.age, condition: obj.age <= 7 || obj.age >= 100 || isNaN(obj.age), message: "Please enter a valid age." },
         firstName: { value: obj.firstName, message: "First name is required." },
         lastName: { value: obj.lastName, message: "Last name is required." },
         email: { value: obj.email, condition: !validateEmail(obj.email), message: "Please enter a valid email address." },

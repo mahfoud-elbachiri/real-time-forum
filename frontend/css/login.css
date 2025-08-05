@@ -1,9 +1,32 @@
 /* Basic reset */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
+}
+
+.brand-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-name {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #5d3fd3 0%, #9b6cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
 }
 
 body {
@@ -13,7 +36,10 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  background: #f4f4f4;
+  background-image: url('/frontend/public/background.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 .error-message {
@@ -65,12 +91,12 @@ button[type="login"]:hover {
 }
 
 .register-btn {
-  background: #28a745;
+ background: linear-gradient(135deg, #5d3fd3 0%, #9b6cff 100%);
   color: white;
 }
 
 .register-btn:hover {
-  background: #1e7e34;
+  background: linear-gradient(135deg, #5d3fd3 0%, #1f0f41 100%);
 }
 
 
@@ -160,5 +186,3 @@ button[type="login"]:hover {
 .avatar-option:hover img {
   border-color: #ddd;
 }
-
-

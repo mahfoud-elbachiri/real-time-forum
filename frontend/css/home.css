@@ -1,6 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
 
+body {
+  background-image: url('/frontend/public/background.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  margin: 0;
+}
+
 .home-container {
   display: grid;
   grid-template-columns: 250px 1fr 290px;
@@ -11,13 +19,32 @@
 
 /* Sidebar */
 .sidebar {
-  background: #f8f9fa;
+  background: rgba(248, 249, 250, 0.85);
   padding: 15px;
   border-radius: 10px;
-
 }
 
-.sidebar h2,
+.brand-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-name {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #5d3fd3 0%, #9b6cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
 .sidebar h3 {
   text-align: center;
   margin-bottom: 10px;
@@ -34,23 +61,32 @@
 
 .sidebar button {
   width: 100%;
-  padding: 8px;
+  padding: 10px 15px;
   border: none;
   cursor: pointer;
-  background: #007bff;
+  background: linear-gradient(135deg, #5d3fd3 0%, #c9a1f7 100%);
   color: white;
-  border-radius: 5px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
 }
 
 .sidebar button:hover {
-  background: #0056b3;
+  filter: brightness(110%);
+  transform: translateX(2px);
 }
 
 /* Active filter button state */
 .sidebar button.filter-active {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
-  transform: scale(1.02);
+  background: #1a1a1b;
+  /* Darker for active, overrides gradient */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: none;
 }
 
 /* Main Content */
@@ -216,7 +252,7 @@
 
 /* Messages */
 .messages {
-  background: #f1f1f1;
+  background: rgba(241, 241, 241, 0.85);
   padding: 15px;
   border-radius: 10px;
 }
