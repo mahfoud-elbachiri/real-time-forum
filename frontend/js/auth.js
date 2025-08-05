@@ -10,8 +10,8 @@ export async function Register() {
     clearErrors();
     const obj = {
         nickname: document.getElementById("nickname").value,
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
+        first_name: document.getElementById("firstName").value,
+        last_name: document.getElementById("lastName").value,
         age: Number(document.getElementById("age").value),
         gender: document.getElementById("gender").value,
         email: document.getElementById("email").value,
@@ -27,8 +27,8 @@ export async function Register() {
     const fields = {
         nickname: { value: obj.nickname, message: "Nickname is required." },
         age: { value: obj.age, condition: obj.age <= 7 || obj.age >= 100 || isNaN(obj.age), message: "Please enter a valid age." },
-        firstName: { value: obj.firstName, message: "First name is required." },
-        lastName: { value: obj.lastName, message: "Last name is required." },
+        firstName: { value: obj.first_name, message: "First name is required." },
+        lastName: { value: obj.last_name, message: "Last name is required." },
         email: { value: obj.email, condition: !validateEmail(obj.email), message: "Please enter a valid email address." },
         password: { value: obj.password, condition: obj.password.length < 6, message: "Password must be at least 6 characters." }
     };

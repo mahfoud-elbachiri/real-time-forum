@@ -1,6 +1,6 @@
 // Posts module
 import { showpopup, timeAgo } from '/frontend/js/utils.js';
-    import { checkSession } from '/frontend/js/auth.js';
+import { checkSession } from '/frontend/js/auth.js';
 import { fetchComments, createComment } from '/frontend/js/comments.js';
 import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 
@@ -8,7 +8,7 @@ import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 const state = {
     filter: "all",
     category: null,
-    sort: null, 
+    sort: null,
 };
 
 export async function fetchPosts(filter = "all", category = null) {
@@ -143,11 +143,11 @@ export async function fetchPosts(filter = "all", category = null) {
 }
 
 export function createPost() {
-     const quickInput = document.getElementById("thread-title");
+    const quickInput = document.getElementById("thread-title");
     let initialTitle = "";
     if (quickInput && quickInput.value) {
         initialTitle = quickInput.value;
-        quickInput.value = "";  
+        quickInput.value = "";
     }
 
     const popup = document.createElement("div");
