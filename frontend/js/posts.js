@@ -8,7 +8,7 @@ import { handleLike, handleDislike } from '/frontend/js/reactions.js';
 const state = {
     filter: "all",
     category: null,
-    sort: null, // "hot" for most liked
+    sort: null, 
 };
 
 export async function fetchPosts(filter = "all", category = null) {
@@ -105,7 +105,7 @@ export async function fetchPosts(filter = "all", category = null) {
 
             divpost.appendChild(postElement);
 
-            // Comment toggle listener
+            // comment toggle listener
             const commentToggle = postElement.querySelector(".comment-toggle");
             commentToggle.addEventListener("click", () => {
                 const commentsSection = document.getElementById(`comments-${post.id}`);
@@ -117,13 +117,13 @@ export async function fetchPosts(filter = "all", category = null) {
                 }
             });
 
-           
+
             const commentSubmit = postElement.querySelector(".comment-submit");
             commentSubmit.addEventListener("click", () => {
                 createComment(post.id);
             });
 
-            
+
             const upvoteBtn = postElement.querySelector(".upvote");
             upvoteBtn.addEventListener("click", () => {
                 handleLike(postElement, post.id);
@@ -143,13 +143,20 @@ export async function fetchPosts(filter = "all", category = null) {
 }
 
 export function createPost() {
+     const quickInput = document.getElementById("thread-title");
+    let initialTitle = "";
+    if (quickInput && quickInput.value) {
+        initialTitle = quickInput.value;
+        quickInput.value = "";  
+    }
+
     const popup = document.createElement("div");
     popup.className = "post-popup";
     popup.innerHTML = `
         <div class="post-popup-content">
             <h2>Create New Post</h2>
             <form id="post-form">
-                <input type="text" id="post-title" placeholder="Title" required>
+                <input type="text" id="post-title" placeholder="Title" value="${initialTitle}" required>
                 <textarea id="post-content" placeholder="Content" rows="4" required></textarea>
                 
                 <div class="categories">
@@ -241,13 +248,13 @@ function filterCategory(category) {
     toggleState("category", category, null);
 }
 
- 
+
 function toggleSortDropdown() {
     const menu = document.getElementById('sort-dropdown-menu');
     menu.classList.toggle('show');
 }
 
- 
+
 document.addEventListener('click', (e) => {
     const dropdown = document.querySelector('.sort-dropdown');
     if (dropdown && !dropdown.contains(e.target)) {
@@ -256,7 +263,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
- 
+
 const sortOptions = {
     latest: {
         icon: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
@@ -292,7 +299,7 @@ function setSort(sortKey) {
     state.sort = option.sort;
     state.currentSortKey = sortKey;
 
- 
+
     const iconSpan = document.getElementById('current-sort-icon');
     const labelSpan = document.getElementById('current-sort-label');
     if (iconSpan) iconSpan.innerHTML = option.icon;

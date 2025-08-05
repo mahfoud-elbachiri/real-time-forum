@@ -1,5 +1,5 @@
 // Comments module
-import { showpopup } from '/frontend/js/utils.js';
+import { showpopup, timeAgo } from '/frontend/js/utils.js';
 
 export async function fetchComments(postId) {
     const commentsList = document.getElementById(`comments-list-${postId}`);
@@ -30,8 +30,7 @@ export async function fetchComments(postId) {
             commentsList.innerHTML = "";
 
             comments.forEach(comment => {
-                const commentDate = new Date(comment.created_at);
-                const formattedDate = commentDate.toLocaleString();
+                const formattedDate = timeAgo(comment.created_at);
 
                 const commentElement = document.createElement("div");
                 commentElement.className = "comment-item";
@@ -85,9 +84,9 @@ export async function createComment(postId) {
 
         commentInput.value = "";
         fetchComments(postId);
-        showpopup("Comment added successfully", "success");
+         
     } catch (error) {
         console.error("Error submitting comment:", error);
-        showpopup(error.message, "error");
+         
     }
 }

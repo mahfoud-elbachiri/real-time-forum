@@ -16,8 +16,7 @@ function showApp() {
     if (spinner) spinner.classList.add('hidden');
 }
 
-// Add event listeners
-function addListeners() {
+ function addListeners() {
     document.body.addEventListener("click", function (event) {
         if (event.target.matches(".register-btn")) {
             navigateTo("register");
@@ -179,8 +178,15 @@ export async function navigateTo(page) {
                                 </button>
                             </div>
                         </div>
+                       
+                       
+                    </div>
+                    <div class="input-wrapper">
+                     <input type="text" id="thread-title" placeholder="Thread Title"> 
+                        <button onclick="createPost()">+</button>
                     </div>
                     <div class="post-feed">Loading posts...</div>
+                    
                 </main>
 
                 <!-- Private Messages Section -->
@@ -230,7 +236,7 @@ export async function navigateTo(page) {
         history.replaceState({ page: page }, "", page);
     }
 
-    // Show content after everything is ready
+ 
     showApp();
 }
 

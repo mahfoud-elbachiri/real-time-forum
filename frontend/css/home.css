@@ -58,7 +58,7 @@
   background: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 10px;
-  
+
 }
 
 /* Content header with title and dropdown */
@@ -165,6 +165,50 @@
 
 .sort-dropdown-menu button:last-child {
   border-radius: 0 0 8px 8px;
+}
+
+/* Quick Post Input */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 8px 8px 8px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid #f0f0f0;
+}
+
+.input-wrapper input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #1a1a1b;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.input-wrapper button {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: #5d3fd3;
+  color: white;
+  border: none;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  line-height: 0;
+  padding-bottom: 4px;
+}
+
+.input-wrapper button:hover {
+  background-color: #4c32b3;
+  transform: scale(1.05);
 }
 
 /* Posts */
@@ -963,7 +1007,7 @@
   background-color: #005fa3;
 }
 
-/* Add pre tag styling for post content */
+
 .post-content pre {
   font-family: inherit;
   margin: 0;

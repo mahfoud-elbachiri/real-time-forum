@@ -2,6 +2,16 @@
 import { showpopup } from '/frontend/js/utils.js';
 
 export async function handleLike(postElement, postId) {
+    const upvoteBtn = postElement.querySelector(".upvote");
+    const downvoteBtn = postElement.querySelector(".downvote");
+    const voteCount = postElement.querySelector(".vote-count");
+
+   
+    if (downvoteBtn.classList.contains("active")) {
+        await handleDislike(postElement, postId);
+        return;
+    }
+
     try {
         const response = await fetch('/api/like', {
             method: "POST",
@@ -13,29 +23,19 @@ export async function handleLike(postElement, postId) {
             throw new Error("Failed to like post");
         }
 
-        const upvoteBtn = postElement.querySelector(".upvote");
-        const downvoteBtn = postElement.querySelector(".downvote");
-        const voteCount = postElement.querySelector(".vote-count");
-
         const isLiked = upvoteBtn.classList.contains("active");
 
         if (isLiked) {
-            // Unlike
+            // unlike
             upvoteBtn.classList.remove("active");
             voteCount.classList.remove("upvoted");
             voteCount.textContent = parseInt(voteCount.textContent) - 1;
         } else {
-            // Like
+            // like
             upvoteBtn.classList.add("active");
             voteCount.classList.add("upvoted");
             voteCount.classList.remove("downvoted");
             voteCount.textContent = parseInt(voteCount.textContent) + 1;
-
-            // Remove dislike if exists
-            if (downvoteBtn.classList.contains("active")) {
-                downvoteBtn.classList.remove("active");
-                voteCount.textContent = parseInt(voteCount.textContent) + 1;
-            }
         }
     } catch (error) {
         console.error("Error liking post:", error);
@@ -44,6 +44,16 @@ export async function handleLike(postElement, postId) {
 }
 
 export async function handleDislike(postElement, postId) {
+    const upvoteBtn = postElement.querySelector(".upvote");
+    const downvoteBtn = postElement.querySelector(".downvote");
+    const voteCount = postElement.querySelector(".vote-count");
+
+    // If currently liked, just undo the like (step 1 of 2)
+    if (upvoteBtn.classList.contains("active")) {
+        await handleLike(postElement, postId);
+        return;
+    }
+
     try {
         const response = await fetch('/api/dislike', {
             method: "POST",
@@ -55,29 +65,19 @@ export async function handleDislike(postElement, postId) {
             throw new Error("Failed to dislike post");
         }
 
-        const upvoteBtn = postElement.querySelector(".upvote");
-        const downvoteBtn = postElement.querySelector(".downvote");
-        const voteCount = postElement.querySelector(".vote-count");
-
         const isDisliked = downvoteBtn.classList.contains("active");
 
         if (isDisliked) {
-            // Remove dislike
+            // rremove dislike
             downvoteBtn.classList.remove("active");
             voteCount.classList.remove("downvoted");
             voteCount.textContent = parseInt(voteCount.textContent) + 1;
         } else {
-            // Dislike
+            // dislike
             downvoteBtn.classList.add("active");
             voteCount.classList.add("downvoted");
             voteCount.classList.remove("upvoted");
             voteCount.textContent = parseInt(voteCount.textContent) - 1;
-
-            // Remove like if exists
-            if (upvoteBtn.classList.contains("active")) {
-                upvoteBtn.classList.remove("active");
-                voteCount.textContent = parseInt(voteCount.textContent) - 1;
-            }
         }
     } catch (error) {
         console.error("Error disliking post:", error);
