@@ -521,13 +521,15 @@ body {
 
 .typing {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   gap: 3px;
-  padding: 5px 10px;
-  height: 10px;
-  margin-top: auto;
-  /* margin-bottom: 6px; */
+  padding: 8px 12px;
+  width: fit-content;
+  background-color: #e4e6eb;
+  border-radius: 18px;
+  margin-bottom: 8px;
+  margin-left: 12px;
 }
 
 .typing-dot {
@@ -645,12 +647,12 @@ body {
 }
 
 .post-popup button[type="submit"] {
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #5d3fd3 0%, #9b6cff 100%);
   color: white;
 }
 
 .post-popup .cancel-post {
-  background-color: #f44336;
+  background: black;
   color: white;
 }
 

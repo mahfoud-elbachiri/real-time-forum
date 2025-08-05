@@ -154,7 +154,7 @@ export function createPost() {
     popup.className = "post-popup";
     popup.innerHTML = `
         <div class="post-popup-content">
-            <h2>Create New Post</h2>
+            <h2>Create New Thread</h2>
             <form id="post-form">
                 <input type="text" id="post-title" placeholder="Title" value="${initialTitle}" required>
                 <textarea id="post-content" placeholder="Content" rows="4" required></textarea>

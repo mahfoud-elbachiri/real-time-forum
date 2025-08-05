@@ -134,8 +134,16 @@ func Removeconn(nickname string) {
 
 func hndlemessage(msg Message, userinfo usersinfo) {
 	if msg.Type == "send-message" {
+		// Get receiver ID
+		var receiverID int
+		err := database.DB.QueryRow("SELECT id FROM users WHERE nickname = ?", msg.Receiver).Scan(&receiverID)
+		if err != nil {
+			log.Println("Error finding receiver user ID:", err)
+			return
+		}
+
 		query := `INSERT INTO messages (sender, receiver, content) VALUES (?, ?, ?)`
-		_, err := database.DB.Exec(query, userinfo.nickname, msg.Receiver, msg.Msg)
+		_, err = database.DB.Exec(query, userinfo.id, receiverID, msg.Msg)
 		if err != nil {
 			log.Println("Error inserting message into database:", err)
 			return
@@ -164,31 +172,60 @@ func hndlemessage(msg Message, userinfo usersinfo) {
 			log.Println("Error sending message confirmation to sender:", err)
 		}
 	} else if msg.Type == "get-message" {
+		// Get chatWith ID
+		var chatWithID int
+		err := database.DB.QueryRow("SELECT id FROM users WHERE nickname = ?", msg.Receiver).Scan(&chatWithID)
+		if err != nil {
+			log.Println("Error finding chat partner ID:", err)
+			return
+		}
+
 		updateQuery := `UPDATE messages 
-		SET read_status = false 
+		SET read_status = 1 
 		WHERE receiver = ? AND sender = ?`
-		_, err := database.DB.Exec(updateQuery, userinfo.nickname, msg.Receiver)
+		_, err = database.DB.Exec(updateQuery, userinfo.id, chatWithID)
 		if err != nil {
 			log.Println("Error updating message read status:", err)
 			return
 		}
+
+
 		query := `SELECT id, sender, receiver, content, created_at FROM messages 
           WHERE (sender = ? AND receiver = ?) OR (receiver = ? AND sender = ?)
           ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?`
-		rows, err := database.DB.Query(query, userinfo.nickname, msg.Receiver, userinfo.nickname, msg.Receiver, msg.Limit, msg.Offset)
+
+		rows, err := database.DB.Query(query, userinfo.id, chatWithID, userinfo.id, chatWithID, msg.Limit, msg.Offset)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		defer rows.Close()
 
 		var allmsg []dbmsg
 		for rows.Next() {
-			var msg dbmsg
-			if err := rows.Scan(&msg.id, &msg.sender, &msg.receiver, &msg.content, &msg.date); err != nil {
+			var senderID, receiverID int
+			var dbMessage dbmsg
+
+			if err := rows.Scan(&dbMessage.id, &senderID, &receiverID, &dbMessage.content, &dbMessage.date); err != nil {
 				log.Println("Error scanning row:", err)
 				continue
 			}
-			allmsg = append(allmsg, msg)
+
+			
+			if senderID == userinfo.id {
+				dbMessage.sender = userinfo.nickname
+			} else {
+				dbMessage.sender = msg.Receiver 
+			}
+
+
+			if receiverID == userinfo.id {
+				dbMessage.receiver = userinfo.nickname
+			} else {
+				dbMessage.receiver = msg.Receiver
+			}
+
+			allmsg = append(allmsg, dbMessage)
 		}
 
 		hasMoreMessages := len(allmsg) >= msg.Limit

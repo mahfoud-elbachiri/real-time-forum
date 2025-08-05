@@ -185,29 +185,33 @@ export function createWebSockets() {
         } else if (data.Type === "chat-history") {
             getOldMessages(data);
         } else if (data.Type === "typing") {
-            console.log("kteb l ", data.Receiver, data.Sender, "kikteb lih");
             const chatmessage = document.querySelector(`#chat-messages-${data.Sender}`);
-            const points = document.querySelector(".typing");
-            if (chatmessage && points === null) {
-                const typing = document.createElement("div");
-                typing.classList.add("typing");
-                const typingdot = document.createElement("div");
-                typingdot.classList.add("typing-dot");
-                typing.appendChild(typingdot);
+            if (chatmessage) {
+                const points = chatmessage.querySelector(".typing");
+                if (points === null) {
+                    const typing = document.createElement("div");
+                    typing.classList.add("typing");
+                    const typingdot = document.createElement("div");
+                    typingdot.classList.add("typing-dot");
+                    typing.appendChild(typingdot);
 
-                const typingone = document.createElement("div");
-                typingone.classList.add("typing-dot");
-                typing.appendChild(typingone);
+                    const typingone = document.createElement("div");
+                    typingone.classList.add("typing-dot");
+                    typing.appendChild(typingone);
 
-                const typingtwo = document.createElement("div");
-                typingtwo.classList.add("typing-dot");
-                typing.appendChild(typingtwo);
-                chatmessage.appendChild(typing);
-                chatmessage.scrollTop = chatmessage.scrollHeight;
+                    const typingtwo = document.createElement("div");
+                    typingtwo.classList.add("typing-dot");
+                    typing.appendChild(typingtwo);
+                    chatmessage.appendChild(typing);
+                    chatmessage.scrollTop = chatmessage.scrollHeight;
+                }
             }
         } else if (data.Type === "stop_typing") {
-            const typingEl = document.querySelector(".typing");
-            if (typingEl) typingEl.remove();
+            const chatmessage = document.querySelector(`#chat-messages-${data.Sender}`);
+            if (chatmessage) {
+                const typingEl = chatmessage.querySelector(".typing");
+                if (typingEl) typingEl.remove();
+            }
         }
     };
 }

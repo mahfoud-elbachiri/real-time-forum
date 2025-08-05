@@ -62,7 +62,7 @@ func InitSchema() {
 
 	queries := []string{
 
-		// USERS
+		
 		`CREATE TABLE IF NOT EXISTS users (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			nickname TEXT UNIQUE NOT NULL,
@@ -75,7 +75,7 @@ func InitSchema() {
 			avatar_url TEXT DEFAULT ''
 		);`,
 
-		// SESSIONS
+		
 		`CREATE TABLE IF NOT EXISTS sessions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			session TEXT NOT NULL,
@@ -84,7 +84,7 @@ func InitSchema() {
 			FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 		);`,
 
-		// POSTS
+		
 		`CREATE TABLE IF NOT EXISTS posts (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL,
@@ -95,7 +95,6 @@ func InitSchema() {
 			FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 		);`,
 
-		// COMMENTS
 		`CREATE TABLE IF NOT EXISTS comments (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			post_id INTEGER NOT NULL,
@@ -106,7 +105,6 @@ func InitSchema() {
 			FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 		);`,
 
-		// MESSAGES
 		`CREATE TABLE IF NOT EXISTS messages (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			sender INTEGER NOT NULL,
@@ -118,7 +116,6 @@ func InitSchema() {
 			FOREIGN KEY (receiver) REFERENCES users(id) ON DELETE CASCADE
 		);`,
 
-		// LIKES
 		`CREATE TABLE IF NOT EXISTS liked_posts (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			post_id INTEGER NOT NULL,
@@ -129,7 +126,6 @@ func InitSchema() {
 			UNIQUE (post_id, user_id)
 		);`,
 
-		// DISLIKES
 		`CREATE TABLE IF NOT EXISTS disliked_posts (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			post_id INTEGER NOT NULL,
@@ -147,8 +143,7 @@ func InitSchema() {
 		}
 	}
 
-	// Migration for avatar_url
-	_, _ = db.Exec("ALTER TABLE users ADD COLUMN avatar_url TEXT DEFAULT ''")
+ 
 
 	createIndexes(db)
 }
