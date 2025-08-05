@@ -48,7 +48,7 @@ export async function handleDislike(postElement, postId) {
     const downvoteBtn = postElement.querySelector(".downvote");
     const voteCount = postElement.querySelector(".vote-count");
 
-    // If currently liked, just undo the like (step 1 of 2)
+     
     if (upvoteBtn.classList.contains("active")) {
         await handleLike(postElement, postId);
         return;

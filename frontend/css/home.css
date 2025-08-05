@@ -17,9 +17,9 @@ body {
   height: 100vh;
 }
 
-/* Sidebar */
+ 
 .sidebar {
-  background: rgba(248, 249, 250, 0.85);
+  background: rgba(248, 249, 250, 0.719);
   padding: 15px;
   border-radius: 10px;
 }
