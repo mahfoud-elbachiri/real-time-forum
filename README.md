@@ -2,6 +2,8 @@
 
 A real-time forum application built with a generic Go backend and a vanilla JavaScript frontend. It features live chat, posts, comments, and real-time user interactions using WebSockets.
 
+![Demo](frontend/public/DEMO.gif)
+
 ## Features
 
 - **User Authentication**: Register, Login, and Logout functionality.
